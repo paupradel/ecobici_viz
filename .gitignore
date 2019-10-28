@@ -2,6 +2,9 @@
 mexico_city-agebs-2019-2-All-HourlyAggregate.csv
 2019_files.zip
 ecobici_2019.csv
+.ipynb_checkpoints
+.Rhistory
+.DS_Store
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
