@@ -5,6 +5,9 @@ ecobici_2019.csv
 .ipynb_checkpoints
 .Rhistory
 .DS_Store
+datos_ecobici_ageb.csv
+
+
 env_ecobici
 # Byte-compiled / optimized / DLL files
 __pycache__/
