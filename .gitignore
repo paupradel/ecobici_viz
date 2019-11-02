@@ -3,13 +3,17 @@ mexico_city-agebs-2019-2-All-HourlyAggregate.csv
 2019_files.zip
 ecobici_2019.csv
 .ipynb_checkpoints
+mexico_city-agebs-2019-1-OnlyWeekdays-HourlyAggregate.csv
 .Rhistory
 .DS_Store
+datos_ecobici_ageb.csv
+
+
 env_ecobici
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
-*$py.class
+*$py.classs
 
 # C extensions
 *.so
@@ -135,3 +139,5 @@ dmypy.json
 other
 .gitattributes
 .DS_Store
+lista_agebs_uber_corregida.csv
+Archivo.zip
