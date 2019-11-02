@@ -1,0 +1,7 @@
+"Time Of Day","Origin Movement ID","Origin Display Name","Destination Movement ID","Destination Display Name","Date Range","Mean Travel Time (Seconds)","Range - Lower Bound Travel Time (Seconds)","Range - Upper Bound Travel Time (Seconds)"
+"Daily Average","4715","Movement Zone 4715","4801","Movement Zone 4801","6/1/2019 - 6/30/2019, Every day",,,
+"AM Peak","4715","Movement Zone 4715","4801","Movement Zone 4801","6/1/2019 - 6/30/2019, Every day",859,586,1261
+"Midday","4715","Movement Zone 4715","4801","Movement Zone 4801","6/1/2019 - 6/30/2019, Every day",859,551,1339
+"PM Peak","4715","Movement Zone 4715","4801","Movement Zone 4801","6/1/2019 - 6/30/2019, Every day",1015,625,1648
+"Evening","4715","Movement Zone 4715","4801","Movement Zone 4801","6/1/2019 - 6/30/2019, Every day",915,562,1488
+"Early Morning","4715","Movement Zone 4715","4801","Movement Zone 4801","6/1/2019 - 6/30/2019, Every day",626,388,1009

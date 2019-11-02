@@ -1,0 +1,8 @@
+"Day Of Week","Origin Movement ID","Origin Display Name","Destination Movement ID","Destination Display Name","Date Range","Mean Travel Time (Seconds)","Range - Lower Bound Travel Time (Seconds)","Range - Upper Bound Travel Time (Seconds)"
+"Monday","4715","Movement Zone 4715","4801","Movement Zone 4801","6/1/2019 - 6/30/2019, Daily Average",835,540,1289
+"Tuesday","4715","Movement Zone 4715","4801","Movement Zone 4801","6/1/2019 - 6/30/2019, Daily Average",807,550,1183
+"Wednesday","4715","Movement Zone 4715","4801","Movement Zone 4801","6/1/2019 - 6/30/2019, Daily Average",860,559,1323
+"Thursday","4715","Movement Zone 4715","4801","Movement Zone 4801","6/1/2019 - 6/30/2019, Daily Average",997,578,1721
+"Friday","4715","Movement Zone 4715","4801","Movement Zone 4801","6/1/2019 - 6/30/2019, Daily Average",1052,630,1754
+"Saturday","4715","Movement Zone 4715","4801","Movement Zone 4801","6/1/2019 - 6/30/2019, Daily Average",793,506,1243
+"Sunday","4715","Movement Zone 4715","4801","Movement Zone 4801","6/1/2019 - 6/30/2019, Daily Average",650,426,991
