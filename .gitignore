@@ -136,7 +136,7 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-other
+# other
 .gitattributes
 .DS_Store
 lista_agebs_uber_corregida.csv
@@ -145,3 +145,4 @@ data/uber/mexico_city-agebs-2018-1-OnlyWeekdays-HourlyAggregate.csv
 data/uber/mexico_city-agebs-2019-2-OnlyWeekdays-HourlyAggregate.csv
 data/procesado/datos_ecobici_por_ageb.csv
 .idea/
+data/uber/mexico_city-agebs-2018-3-All-HourlyAggregate.csv

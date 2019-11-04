@@ -7,3 +7,25 @@
      /*background-attachment: fixed;*/
      /*background-size: cover;*/
  }
+
+ header {
+    position: sticky;
+    display: flex;
+    height: 50px;
+    margin-top: 0px;
+    margin-left: 10px;
+    margin-right: 20px;
+    background-color: white;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
+}
+
+ .mini_container {
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  margin: 10px;
+  padding: 15px;
+  position: relative;
+  box-shadow: 2px 2px 2px lightgrey;
+}
