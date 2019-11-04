@@ -137,10 +137,11 @@ layout_sankey=go.Layout(title_text= 'Sankey')
 
 figure_sankey= go.Figure(data= data_sankey, layout= layout_sankey)
 
-#--------------------------------- Big number ------------------------------------#
+#--------------------------------- Big number y porcentaje por género------------------------------------#
 
 #Leer archivo de viajes de ecobici
 df_ve= pd.read_csv('./data/production_data/viajes_ecobici.csv')
+df_ve['Hora_Retiro_bin']=df_ve['Hora_Retiro_bin_']
 
 df_ve= df_ve[(df_ve['CVE_AGEB_retiro_']==primer_ageb) & (df_ve['CVE_AGEB_arribo_']==segundo_ageb)]
 
@@ -181,13 +182,54 @@ def nombre_archivo_cascos():
     return str("cascos/" + archivo)
 
 porcentaje_genero= str(nombre_archivo_cascos())
-print(porcentaje_genero)
 
+#---------------------------------Grafica de barras-------------------------------#
+
+# Datos uber
+df_uber = pd.read_csv('./data/production_data/viajes_uber.csv')
+
+# Asignar bote
+def asignar_bote(df, columna= 'Hora_Retiro_bin'):
+    if df[columna]=='7-10':
+        return 0
+    if df[columna]=='10-13':
+        return 1
+    if df[columna]=='13-16':
+        return 2
+    if df[columna]=='16-19':
+        return 3
+    if df[columna]=='19-22':
+        return 4
+    if df[columna]=='22-1':
+        return 5
+
+# Asignar columna de periodo y reordenar dataframes
+df_uber['periodo']= df_uber.apply(asignar_bote, axis=1)
+df_ve['periodo']= df_ve.apply(asignar_bote, axis=1)
+
+# Filtrar datos
+df_uber = df_uber[(df_uber['sourceid'] == primer_ageb) & (df_uber['dstid'] == segundo_ageb)]
+
+df_uber= df_uber.sort_values(by='periodo', ascending=True)
+df_ve= df_ve.sort_values(by='periodo', ascending=True)
+
+# Establecer datos en x y y
+x_uber=df_uber['Hora_Retiro_bin']
+y_uber=df_uber['mean_travel_time']
+x_ecobici=df_ve['Hora_Retiro_bin']
+y_ecobici=df_ve['duracion_viaje_minutos_mean']
+
+#Datos y layout
+data_bar= [go.Bar(name= 'ecobici',x=x_ecobici,y=y_ecobici),
+           go.Bar(name= 'uber', x=x_uber, y=y_uber)]
+
+layout_bar= go.Layout(xaxis= {'type': 'category'})
+
+figure_bar= go.Figure(data=data_bar, layout= layout_bar)
 
 #--------------------------------- Layout de la app-------------------------------#
 app.layout= html.Div([html.Div([html.Header([html.H1('Ecobici'),
-                                            # html.Img(src=app.get_asset_url('github_120.png'))
-                                             ],
+                                            html.Img(src=app.get_asset_url('github_120.png'))],
                                             id='titulo-app', className='titulo-app'),
                                 html.Div([dcc.Graph(figure=figure_mapa)],
                                          id='mapa', className='mapa')],
@@ -196,7 +238,10 @@ app.layout= html.Div([html.Div([html.Header([html.H1('Ecobici'),
                                           html.Img(src=app.get_asset_url(porcentaje_genero), alt='porcentaje_genero', className='genero')]
                                          ,id='edad-genero', className='edad-genero'),
                                 html.Div([dcc.Graph(figure=figure_sankey)],id='sankey', className='sankey'),
-                                html.Div(id='hora-recorrido', className='hora-recorrido')], id= 'espacio-narrativa', className='espacio-narrativa')])
+                                html.Div([dcc.Graph(figure=figure_bar)],id='hora-recorrido', className='hora-recorrido')], id= 'espacio-narrativa', className='espacio-narrativa')])
+
+
+
 
 if __name__ == '__main__':
     app.run_server(debug=True)
