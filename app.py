@@ -228,17 +228,28 @@ layout_bar= go.Layout(xaxis= {'type': 'category'})
 figure_bar= go.Figure(data=data_bar, layout= layout_bar)
 
 #--------------------------------- Layout de la app-------------------------------#
-app.layout= html.Div([html.Div([html.Header([html.H1('Ecobici'),
-                                            html.Img(src=app.get_asset_url('github_120.png'))],
-                                            id='titulo-app', className='titulo-app'),
-                                html.Div([dcc.Graph(figure=figure_mapa)],
-                                         id='mapa', className='mapa')],
-                               id='espacio-mapa', className='espacio-mapa'),
-                      html.Div([html.Div([html.H2(edad_promedio_usuario),
-                                          html.Img(src=app.get_asset_url(porcentaje_genero), alt='porcentaje_genero', className='genero')]
-                                         ,id='edad-genero', className='edad-genero'),
-                                html.Div([dcc.Graph(figure=figure_sankey)],id='sankey', className='sankey'),
-                                html.Div([dcc.Graph(figure=figure_bar)],id='hora-recorrido', className='hora-recorrido')], id= 'espacio-narrativa', className='espacio-narrativa')])
+# app.layout= html.Div([html.Div([html.Header([html.H1('Ecobici'),
+#                                             html.Img(src=app.get_asset_url('github_120.png'))],
+#                                             id='titulo-app', className='titulo-app'),
+#                                 html.Div([dcc.Graph(figure=figure_mapa)],
+#                                          id='mapa', className='mapa')],
+#                                id='espacio-mapa', className='espacio-mapa'),
+#                       html.Div([html.Div([html.H2(edad_promedio_usuario),
+#                                           html.Img(src=app.get_asset_url(porcentaje_genero), alt='porcentaje_genero', className='genero')]
+#                                          ,id='edad-genero', className='edad-genero'),
+#                                 html.Div([dcc.Graph(figure=figure_sankey)],id='sankey', className='sankey'),
+#                                 html.Div([dcc.Graph(figure=figure_bar)],id='hora-recorrido', className='hora-recorrido')], id= 'espacio-narrativa', className='espacio-narrativa')])
+
+app.layout= html.Div([html.Header([html.Div([html.H1('Ecobici')], id='titulo-app', className='titulo-app'),
+                                   html.A([html.Img(src=app.get_asset_url('github.png'), alt='logo github',
+                                                    className='logo-github')], href='https://github.com/paupradel/ecobici_viz')]),
+                      html.Div([dcc.Graph(figure=figure_mapa, id='mapa', className='mapa'),
+                                html.Div([html.H6(edad_promedio_usuario),
+                                          html.P('Edad de usuarios')], id='edades', className='mini_container'),
+                                html.Img(src=app.get_asset_url(porcentaje_genero), alt='porcentaje_genero', className='genero'),
+                                dcc.Graph(figure=figure_sankey, id='sankey', className='sankey'),
+                                dcc.Graph(figure=figure_bar, id='hora-recorrido', className='hora_recorrido')], className='contenedor-ecobici')
+                      ])
 
 
 
