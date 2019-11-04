@@ -137,6 +137,16 @@ layout_sankey=go.Layout(title_text= 'Sankey')
 
 figure_sankey= go.Figure(data= data_sankey, layout= layout_sankey)
 
+#--------------------------------- Big number ------------------------------------#
+
+#Leer archivo de viajes de ecobici
+df_bn= pd.read_csv('./data/production_data/viajes_ecobici.csv')
+
+df_bn= df_bn[(df_bn['CVE_AGEB_retiro_']==primer_ageb) & (df_bn['CVE_AGEB_arribo_']==segundo_ageb)]
+
+#Establecer variable
+edad_promedio_usuario= int(round(df_bn['Edad_Usuario_mean'].mean()))
+
 #--------------------------------- Layout de la app-------------------------------#
 app.layout= html.Div([html.Div([html.Header([html.H1('Ecobici'),
                                             # html.Img(src=app.get_asset_url('github_120.png'))
@@ -145,7 +155,9 @@ app.layout= html.Div([html.Div([html.Header([html.H1('Ecobici'),
                                 html.Div([dcc.Graph(figure=figure_mapa)],
                                          id='mapa', className='mapa')],
                                id='espacio-mapa', className='espacio-mapa'),
-                      html.Div([html.Div(id='edad-genero', className='edad-genero'),
+                      html.Div([html.Div([html.H2(edad_promedio_usuario),
+                                          html.Div(id='genero', className='genero')]
+                                         ,id='edad-genero', className='edad-genero'),
                                 html.Div([dcc.Graph(figure=figure_sankey)],id='sankey', className='sankey'),
                                 html.Div(id='hora-recorrido', className='hora-recorrido')], id= 'espacio-narrativa', className='espacio-narrativa')])
 
