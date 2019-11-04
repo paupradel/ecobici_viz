@@ -140,12 +140,49 @@ figure_sankey= go.Figure(data= data_sankey, layout= layout_sankey)
 #--------------------------------- Big number ------------------------------------#
 
 #Leer archivo de viajes de ecobici
-df_bn= pd.read_csv('./data/production_data/viajes_ecobici.csv')
+df_ve= pd.read_csv('./data/production_data/viajes_ecobici.csv')
 
-df_bn= df_bn[(df_bn['CVE_AGEB_retiro_']==primer_ageb) & (df_bn['CVE_AGEB_arribo_']==segundo_ageb)]
+df_ve= df_ve[(df_ve['CVE_AGEB_retiro_']==primer_ageb) & (df_ve['CVE_AGEB_arribo_']==segundo_ageb)]
 
-#Establecer variable
-edad_promedio_usuario= int(round(df_bn['Edad_Usuario_mean'].mean()))
+#Establecer variable para la edad promedio del usuario
+edad_promedio_usuario= int(round(df_ve['Edad_Usuario_mean'].mean()))
+
+
+def nombre_archivo_cascos():
+    """
+    Mostrar una imagen dependiendo del porcentaje de hombres y mujeres que hacen viajes en ecobici entre agebs
+    """
+    query_genero = df_ve[["porcentage_hombres", "porcentage_mujeres"]].mean().round().astype(int)
+    numero_hombres = query_genero[0]
+
+    if numero_hombres == 0:
+        archivo = "10m-0h.png"
+    elif numero_hombres == 1:
+        archivo = "9m-1h.png"
+    elif numero_hombres == 2:
+        archivo = "8m-2h.png"
+    elif numero_hombres == 3:
+        archivo = "7m-3h.png"
+    elif numero_hombres == 4:
+        archivo = "6m-4h.png"
+    elif numero_hombres == 5:
+        archivo = "5m-5h.png"
+    elif numero_hombres == 6:
+        archivo = "4m-6h.png"
+    elif numero_hombres == 7:
+        archivo = "3m-7h.png"
+    elif numero_hombres == 8:
+        archivo = "2m-8h.png"
+    elif numero_hombres == 9:
+        archivo = "1m-9h.png"
+    elif numero_hombres == 10:
+        archivo = "0m-1h.png"
+
+    return str("cascos/" + archivo)
+
+porcentaje_genero= str(nombre_archivo_cascos())
+print(porcentaje_genero)
+
 
 #--------------------------------- Layout de la app-------------------------------#
 app.layout= html.Div([html.Div([html.Header([html.H1('Ecobici'),
@@ -156,7 +193,7 @@ app.layout= html.Div([html.Div([html.Header([html.H1('Ecobici'),
                                          id='mapa', className='mapa')],
                                id='espacio-mapa', className='espacio-mapa'),
                       html.Div([html.Div([html.H2(edad_promedio_usuario),
-                                          html.Div(id='genero', className='genero')]
+                                          html.Img(src=app.get_asset_url(porcentaje_genero), alt='porcentaje_genero', className='genero')]
                                          ,id='edad-genero', className='edad-genero'),
                                 html.Div([dcc.Graph(figure=figure_sankey)],id='sankey', className='sankey'),
                                 html.Div(id='hora-recorrido', className='hora-recorrido')], id= 'espacio-narrativa', className='espacio-narrativa')])
