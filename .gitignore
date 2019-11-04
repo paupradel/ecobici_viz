@@ -136,7 +136,7 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-other
+# other
 .gitattributes
 .DS_Store
 lista_agebs_uber_corregida.csv
