@@ -83,15 +83,25 @@ locations = geodf['CVE_AGEB'].tolist()
 trace_mapa = go.Choroplethmapbox(z = z,
                                  locations=locations,
                                  colorscale= 'Viridis',
+                                 colorbar= {'thicknessmode': 'pixels',
+                                            'thickness': 7,
+                                            'outlinecolor': 'white',
+                                            'title': {'text': 'km',
+                                                      'side': 'bottom'}},
+                                 reversescale=True,
                                  geojson=jdata,
-                                 hoverinfo= 'all',
+                                 hoverinfo= 'location',
                                  marker_line_width=0.1,
                                  marker_opacity=0.5)
 
-layout_mapa= go.Layout(mapbox= {'center': {'lat': 19.410737,
-                                           'lon': -99.170879},
+layout_mapa= go.Layout(mapbox= {'center': {'lat': 19.404730,
+                                           'lon': -99.172845},
                                 'style': 'carto-positron',
-                                'zoom': 11.5})
+                                'zoom': 12},
+                       margin= {'l': 0,
+                                'r': 0,
+                                't': 5,
+                                'b': 0})
 
 figure_mapa= go.Figure(data=[trace_mapa], layout=layout_mapa)
 
@@ -240,15 +250,21 @@ figure_bar= go.Figure(data=data_bar, layout= layout_bar)
 #                                 html.Div([dcc.Graph(figure=figure_sankey)],id='sankey', className='sankey'),
 #                                 html.Div([dcc.Graph(figure=figure_bar)],id='hora-recorrido', className='hora-recorrido')], id= 'espacio-narrativa', className='espacio-narrativa')])
 
+estilo_graficas= {'responsive': True,
+                  'autosizable': True,
+                  'displaylogo': False}
+
 app.layout= html.Div([html.Header([html.Div([html.H1('Ecobici')], id='titulo-app', className='titulo-app'),
                                    html.A([html.Img(src=app.get_asset_url('github.png'), alt='logo github',
                                                     className='logo-github')], href='https://github.com/paupradel/ecobici_viz')]),
-                      html.Div([dcc.Graph(figure=figure_mapa, id='mapa', className='mapa'),
-                                html.Div([html.H6(edad_promedio_usuario),
-                                          html.P('Edad de usuarios')], id='edades', className='mini_container-grid-2'),
-                                html.Img(src=app.get_asset_url(porcentaje_genero), id= 'genero', alt='porcentaje_genero', className='genero'),
-                                dcc.Graph(figure=figure_sankey, id='sankey', className='sankey'),
-                                dcc.Graph(figure=figure_bar, id='hora_recorrido', className='hora_recorrido')], className='contenedor-ecobici')
+                      html.Div([dcc.Graph(figure=figure_mapa, id='mapa', className='mapa', config=estilo_graficas),
+                                html.Div([html.P('Edad'),
+                                          html.H1(edad_promedio_usuario, className='edad')], id='edades', className='mini_container-grid-2'),
+                                html.Div([html.P('Género', className='titulo-genero'),
+                                          html.Img(src=app.get_asset_url(porcentaje_genero), id='genero', alt='porcentaje_genero', className='imagen-genero')],
+                                         id='genero-cont', className='genero'),
+                                dcc.Graph(figure=figure_sankey, id='sankey', className='sankey', config=estilo_graficas),
+                                dcc.Graph(figure=figure_bar, id='hora_recorrido', className='hora_recorrido', config=estilo_graficas)], className='contenedor-ecobici')
                       ])
 
 

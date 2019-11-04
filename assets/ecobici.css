@@ -46,21 +46,55 @@
 }
 
  .mapa {
+     padding-top: 0px;
      grid-area: mapa;
  }
 
+ .titulo-genero {
+     grid-area: titulogenero
+ }
+
+ .imagen-genero {
+     padding-left: 20px;
+     padding-right: 20px;
+     position: relative;
+     width: auto;
+     height: 100%;
+     grid-area: imagengenero;
+
+ }
+
  .genero {
+     z-index: -1;
+     display: grid;
+     border-radius: 5px;
+     background-color: #f9f9f9;
+     margin-top: 0px;
+     margin-left: 5px;
+     margin-right: 20px;
+     padding: 5px;
+     position: relative;
+     box-shadow: 2px 2px 2px lightgrey;
      grid-area: genero;
+     grid-template-columns: 20% 80%;
+     grid-template-rows: 100%;
+     grid-template-areas: 'titulogenero imagengenero'
  }
 
  .mini_container-grid-2 {
   border-radius: 5px;
   background-color: #f9f9f9;
-  margin: 10px;
-  padding: 15px;
+  margin-top: 0px;
+  margin-left: 5px;
+  margin-right: 10px;
+  padding: 5px;
   position: relative;
   box-shadow: 2px 2px 2px lightgrey;
   grid-area: edades
+}
+
+.edad {
+    align-items: center;
 }
 
  .sankey {
