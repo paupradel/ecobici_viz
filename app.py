@@ -33,24 +33,26 @@ app.index_string= '''
 </html>'''
 
 #---------------------------------CALLBACKS-------------------------------#
-primer_ageb= '967'
+primer_ageb= 790
+primer_ageb_str= str(primer_ageb)
+segundo_ageb= 822
 
 
 
 #--------------------------------- MAPA -----------------------------------#
 # Leer shapefile y csv
 geodf= gpd.read_file('./data/production_data/ageb_geometry/ageb_geometria.shp')
-df= pd.read_csv('./data/production_data/distancias_agebs.csv', index_col=0)
+df_mapa= pd.read_csv('./data/production_data/distancias_agebs.csv', index_col=0)
 
 # Corregir ceros a la izquierda
 geodf['CVE_AGEB'] = [''.join(filter(lambda x: x.isdigit(), row)) for row in geodf['CVE_AGEB']]
 geodf['CVE_AGEB'] = geodf['CVE_AGEB'].astype(int)
 
 # Reestructurar el dataframe con el ageb seleccionado
-df= df.loc[:, df.columns.isin(['CVE_AGEB', primer_ageb])]
+df_mapa= df_mapa.loc[:, df_mapa.columns.isin(['CVE_AGEB', primer_ageb_str])]
 
 # Unir ambos dataframes
-geodf = geodf.merge(df, on='CVE_AGEB')
+geodf = geodf.merge(df_mapa, on='CVE_AGEB')
 #geodf.set_index('CVE_AGEB', inplace=True)
 geodf['id'] = geodf['CVE_AGEB']
 
@@ -74,7 +76,7 @@ jdata = check_geojson(jdata)
 
 # Establecer parámetros del mapa
 
-z = geodf[primer_ageb].tolist()
+z = geodf[primer_ageb_str].tolist()
 locations = geodf['CVE_AGEB'].tolist()
 
 # Dibujar mapa
@@ -86,13 +88,54 @@ trace_mapa = go.Choroplethmapbox(z = z,
                                  marker_line_width=0.1,
                                  marker_opacity=0.5)
 
-layout_mapa= go.Layout(title_text= 'Choroplethmapbox',
-                       title_x=0.5, width = 700, height=700,
-                       mapbox = dict(center= dict(lat=19.410737,  lon=-99.170879),
-                                     style= 'carto-positron',
-                                     zoom=11.5))
+layout_mapa= go.Layout(mapbox= {'center': {'lat': 19.410737,
+                                           'lon': -99.170879},
+                                'style': 'carto-positron',
+                                'zoom': 11.5})
 
-figure_mapa= go.Figure(data= [trace_mapa], layout=layout_mapa)
+figure_mapa= go.Figure(data=[trace_mapa], layout=layout_mapa)
+
+#-----------------------------------SANKEY----------------------------------------#
+
+# Leer archivo para datos de sankey
+df_sankey= pd.read_csv('./data/production_data/viajes_ecobici_entre_estaciones.csv')
+
+# Filtrar dataframe
+df_sankey= df_sankey[(df_sankey['CVE_AGEB_retiro']==primer_ageb) & (df_sankey['CVE_AGEB_arribo']==segundo_ageb)]
+
+# Estructura de sankey
+estaciones_retiro= df_sankey['nombre_estacion_retiro'].unique().tolist()
+estaciones_arribo= df_sankey['nombre_estacion_arribo'].unique().tolist()
+
+label= estaciones_retiro + estaciones_arribo
+
+indices_retiro= list(range(len(estaciones_retiro)))
+indices_arribo= list(range(len(estaciones_retiro), len(label)))
+
+source= indices_retiro*len(indices_arribo)
+
+def duplicate_target(indices_arribo, n):
+    return [element for element in indices_arribo for _ in range(n)]
+
+target= duplicate_target(indices_arribo, len(indices_retiro))
+
+value= df_sankey['Numero_de_viajes'].tolist()
+
+# Dibujar sankey
+
+data_sankey= go.Sankey(node= {'pad': 15,
+                              'thickness': 20,
+                              'line': {'color': 'black',
+                                       'width': 0.5},
+                              'label': label,
+                              'color': 'blue'},
+                       link= {'source': source,
+                              'target': target,
+                              'value': value})
+
+layout_sankey=go.Layout(title_text= 'Sankey')
+
+figure_sankey= go.Figure(data= data_sankey, layout= layout_sankey)
 
 #--------------------------------- Layout de la app-------------------------------#
 app.layout= html.Div([html.Div([html.Header([html.H1('Ecobici'),
@@ -103,7 +146,7 @@ app.layout= html.Div([html.Div([html.Header([html.H1('Ecobici'),
                                          id='mapa', className='mapa')],
                                id='espacio-mapa', className='espacio-mapa'),
                       html.Div([html.Div(id='edad-genero', className='edad-genero'),
-                                html.Div(id='sankey', className='sankey'),
+                                html.Div([dcc.Graph(figure=figure_sankey)],id='sankey', className='sankey'),
                                 html.Div(id='hora-recorrido', className='hora-recorrido')], id= 'espacio-narrativa', className='espacio-narrativa')])
 
 if __name__ == '__main__':
