@@ -243,12 +243,12 @@ figure_bar= go.Figure(data=data_bar, layout= layout_bar)
 app.layout= html.Div([html.Header([html.Div([html.H1('Ecobici')], id='titulo-app', className='titulo-app'),
                                    html.A([html.Img(src=app.get_asset_url('github.png'), alt='logo github',
                                                     className='logo-github')], href='https://github.com/paupradel/ecobici_viz')]),
-                      html.Div([dcc.Graph(figure=figure_mapa, id='mapa', className='mapa'),
+                      html.Div([dcc.Graph(figure=figure_mapa, id='mapa', className='mapa-grid-1'),
                                 html.Div([html.H6(edad_promedio_usuario),
-                                          html.P('Edad de usuarios')], id='edades', className='mini_container'),
-                                html.Img(src=app.get_asset_url(porcentaje_genero), alt='porcentaje_genero', className='genero'),
-                                dcc.Graph(figure=figure_sankey, id='sankey', className='sankey'),
-                                dcc.Graph(figure=figure_bar, id='hora-recorrido', className='hora_recorrido')], className='contenedor-ecobici')
+                                          html.P('Edad de usuarios')], id='edades', className='mini_container-grid-2'),
+                                html.Img(src=app.get_asset_url(porcentaje_genero), id= 'genero', alt='porcentaje_genero', className='genero-grid-3'),
+                                dcc.Graph(figure=figure_sankey, id='sankey', className='sankey-grid-4'),
+                                dcc.Graph(figure=figure_bar, id='hora-recorrido', className='hora_recorrido-grid-5')], className='contenedor-ecobici')
                       ])
 
 

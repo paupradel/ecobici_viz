@@ -21,6 +21,30 @@
     flex-direction: row;
 }
 
+ header .container {
+    display: inline-block;
+    cursor: pointer;
+    padding-left: 5px;
+    padding-bottom: 7px;
+}
+
+ header .titulo-app {
+    position: sticky;
+    height: 50px;
+    padding-bottom: 17px;
+    padding-left: 10px;
+    float: left;
+}
+
+ .contenedor-ecobici {
+    z-index: -1;
+    height: calc(100vh - 95px);
+    display: grid;
+    grid-template-columns: 60% 20% 20%;
+    grid-template-rows: 20% 40% 40%;
+    grid-template-areas: 'mapa edades genero' 'mapa sankey sankey' 'mapa hora-recorrido hora-recorrido'
+}
+
  .mini_container {
   border-radius: 5px;
   background-color: #f9f9f9;
