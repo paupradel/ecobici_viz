@@ -29,7 +29,10 @@ app.index_string= '''
 
 
 #--------------------------------- Layout de la app-------------------------------#
-app.layout= html.Div([html.Div([html.Header(html.H1('Ecobici'), id='titulo-app', className='titulo-app'),
+app.layout= html.Div([html.Div([html.Header([html.H1('Ecobici'),
+                                            # html.Img(src=app.get_asset_url('github_120.png'))
+                                             ],
+                                            id='titulo-app', className='titulo-app'),
                                 html.Div( id='mapa', className='mapa')], id='espacio-mapa', className='espacio-mapa'),
                       html.Div([html.Div( id='edad-genero', className='edad-genero'),
                                 html.Div( id='sankey', className='sankey'),

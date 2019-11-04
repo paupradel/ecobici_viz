@@ -144,4 +144,5 @@ Archivo.zip
 data/uber/mexico_city-agebs-2018-1-OnlyWeekdays-HourlyAggregate.csv
 data/uber/mexico_city-agebs-2019-2-OnlyWeekdays-HourlyAggregate.csv
 data/procesado/datos_ecobici_por_ageb.csv
-.idea/
+.idea
+/assets/github_120.png
