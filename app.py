@@ -1,6 +1,8 @@
 import dash
+import dash_core_components as dcc
 import dash_html_components as html
 import geopandas as gpd
+import pandas as pd
 import json
 import plotly.graph_objs as go
 
@@ -36,26 +38,25 @@ primer_ageb= '967'
 
 
 #--------------------------------- MAPA -----------------------------------#
-# Leer el shapefile para coordenadas de los polígonos
-geodf= gpd.read_file('/data/production_data/ageb_geometry/ageb_geometria.shp')
+# Leer shapefile y csv
+geodf= gpd.read_file('./data/production_data/ageb_geometry/ageb_geometria.shp')
+df= pd.read_csv('./data/production_data/distancias_agebs.csv', index_col=0)
 
-# Arreglar ceros a la izquierda
+# Corregir ceros a la izquierda
 geodf['CVE_AGEB'] = [''.join(filter(lambda x: x.isdigit(), row)) for row in geodf['CVE_AGEB']]
 geodf['CVE_AGEB'] = geodf['CVE_AGEB'].astype(int)
 
-# Leer el dataframe para datos de distancias entre agebs
-df= pd.read_csv('/data/production_data/distancias_agebs.csv', index_col=0)
+# Reestructurar el dataframe con el ageb seleccionado
 df= df.loc[:, df.columns.isin(['CVE_AGEB', primer_ageb])]
 
-# Combinar shapefile con dataframe
-geodf= geodf.merge(df, on='CVE_AGEB')
-geodf.set_index('CVE_AGEB', inplace=True)
-geodf['id']= geodf['CVE_AGEB']
+# Unir ambos dataframes
+geodf = geodf.merge(df, on='CVE_AGEB')
+#geodf.set_index('CVE_AGEB', inplace=True)
+geodf['id'] = geodf['CVE_AGEB']
 
-# Convertir geo dataframe en geojson
-
-geodf.to_file('test_uber_json.json', driver= 'GeoJSON')
-with open ('test_uber_json.json') as geofile:
+# Convertir geodataframe en geo json y checar su estructura
+geodf.to_file('./data/production_data/ageb_geometry/ageb_geometria.json', driver= 'GeoJSON')
+with open ('./data/production_data/ageb_geometry/ageb_geometria.json') as geofile:
     jdata=json.load(geofile)
 
 def check_geojson(jdata):
@@ -69,28 +70,29 @@ def check_geojson(jdata):
                     jdata['features'][k]['id']= k
     return jdata
 
-jdata= check_geojson(jdata)
+jdata = check_geojson(jdata)
 
-# Establecer parámetros de mapa
+# Establecer parámetros del mapa
 
 z = geodf[primer_ageb].tolist()
-locations = geodf["CVE_AGEB"].tolist()
+locations = geodf['CVE_AGEB'].tolist()
 
-trace_mapa= go.Choroplethmapbox(z=z,
-                                locations=locations,
-                                colorscale='Viridis',
-                                geojson=jdata,
-                                hoverinfo='all',
-                                marker_line_width=0.1,
-                                marker_opacity=0.5)
+# Dibujar mapa
+trace_mapa = go.Choroplethmapbox(z = z,
+                                 locations=locations,
+                                 colorscale= 'Viridis',
+                                 geojson=jdata,
+                                 hoverinfo= 'all',
+                                 marker_line_width=0.1,
+                                 marker_opacity=0.5)
 
-layout_mapa= go.Layout(mapbox= {center: {'lat': 19.410737,
-                                         'lon': -99.170879},
-                                style: 'carto-positron',
-                                zoom: 11.5})
+layout_mapa= go.Layout(title_text= 'Choroplethmapbox',
+                       title_x=0.5, width = 700, height=700,
+                       mapbox = dict(center= dict(lat=19.410737,  lon=-99.170879),
+                                     style= 'carto-positron',
+                                     zoom=11.5))
 
-figure_mapa= {'data': trace_mapa,
-              'layout': layout_mapa}
+figure_mapa= go.Figure(data= [trace_mapa], layout=layout_mapa)
 
 #--------------------------------- Layout de la app-------------------------------#
 app.layout= html.Div([html.Div([html.Header([html.H1('Ecobici'),
