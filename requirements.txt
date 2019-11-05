@@ -12,13 +12,13 @@ Flask==1.1.1
 Flask-Compress==1.4.0
 future==0.18.2
 geopandas==0.6.1
+gunicorn==19.9.0
 itsdangerous==1.1.0
 Jinja2==2.10.3
 MarkupSafe==1.1.1
 munch==2.5.0
 numpy==1.17.3
 pandas==0.25.3
-pkg-resources==0.0.0
 plotly==4.2.1
 pyproj==2.4.0
 python-dateutil==2.8.1
