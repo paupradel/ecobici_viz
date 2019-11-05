@@ -82,16 +82,26 @@ locations = geodf['CVE_AGEB'].tolist()
 # Dibujar mapa
 trace_mapa = go.Choroplethmapbox(z = z,
                                  locations=locations,
-                                 colorscale= 'Viridis',
+                                 colorscale= 'magma',
+                                 colorbar= {'thicknessmode': 'pixels',
+                                            'thickness': 7,
+                                            'outlinecolor': 'white',
+                                            'title': {'text': 'km',
+                                                      'side': 'bottom'}},
+                                 reversescale=True,
                                  geojson=jdata,
-                                 hoverinfo= 'all',
+                                 hoverinfo= 'location',
                                  marker_line_width=0.1,
-                                 marker_opacity=0.5)
+                                 marker_opacity=0.7)
 
-layout_mapa= go.Layout(mapbox= {'center': {'lat': 19.410737,
-                                           'lon': -99.170879},
+layout_mapa= go.Layout(mapbox= {'center': {'lat': 19.404730,
+                                           'lon': -99.172845},
                                 'style': 'carto-positron',
-                                'zoom': 11.5})
+                                'zoom': 12},
+                       margin= {'l': 0,
+                                'r': 0,
+                                't': 5,
+                                'b': 0})
 
 figure_mapa= go.Figure(data=[trace_mapa], layout=layout_mapa)
 
@@ -124,16 +134,24 @@ value= df_sankey['Numero_de_viajes'].tolist()
 # Dibujar sankey
 
 data_sankey= go.Sankey(node= {'pad': 15,
-                              'thickness': 20,
+                              'thickness': 10,
                               'line': {'color': 'black',
                                        'width': 0.5},
                               'label': label,
-                              'color': 'blue'},
+                              'color': '#00b386'},
                        link= {'source': source,
                               'target': target,
-                              'value': value})
+                              'value': value},
+                       textfont= {'family': 'Raleway'})
 
-layout_sankey=go.Layout(title_text= 'Sankey')
+
+layout_sankey=go.Layout(title_text= 'Viajes entre estaciones (retiro a arribo)',
+                        font= {'family': 'Raleway'},
+                        margin={'l': 0,
+                                'r': 5,
+                                't': 25,
+                                'b': 5},
+                        plot_bgcolor= '#f9f9f9')
 
 figure_sankey= go.Figure(data= data_sankey, layout= layout_sankey)
 
@@ -220,35 +238,44 @@ x_ecobici=df_ve['Hora_Retiro_bin']
 y_ecobici=df_ve['duracion_viaje_minutos_mean']
 
 #Datos y layout
-data_bar= [go.Bar(name= 'ecobici',x=x_ecobici,y=y_ecobici),
-           go.Bar(name= 'uber', x=x_uber, y=y_uber)]
+data_bar= [go.Bar(name= 'ecobici',x=x_ecobici,y=y_ecobici, marker_color= '#00b386'),
+           go.Bar(name= 'uber', x=x_uber, y=y_uber, marker_color= 'purple')]
 
-layout_bar= go.Layout(xaxis= {'type': 'category'})
+layout_bar= go.Layout(title_text= 'Auto VS Bicicleta',
+                      barmode= 'group',
+                      xaxis= {'type': 'category',
+                              'title': 'periodo del día',
+                              'titlefont_size': 12},
+                      yaxis= {'title': 'tiempo en minutos',
+                              'titlefont_size': 12},
+                      font={'family': 'Raleway'},
+                      margin={'l': 5,
+                              'r': 5,
+                              't': 25,
+                              'b': 8},
+                      plot_bgcolor='#f9f9f9')
 
 figure_bar= go.Figure(data=data_bar, layout= layout_bar)
 
 #--------------------------------- Layout de la app-------------------------------#
-# app.layout= html.Div([html.Div([html.Header([html.H1('Ecobici'),
-#                                             html.Img(src=app.get_asset_url('github_120.png'))],
-#                                             id='titulo-app', className='titulo-app'),
-#                                 html.Div([dcc.Graph(figure=figure_mapa)],
-#                                          id='mapa', className='mapa')],
-#                                id='espacio-mapa', className='espacio-mapa'),
-#                       html.Div([html.Div([html.H2(edad_promedio_usuario),
-#                                           html.Img(src=app.get_asset_url(porcentaje_genero), alt='porcentaje_genero', className='genero')]
-#                                          ,id='edad-genero', className='edad-genero'),
-#                                 html.Div([dcc.Graph(figure=figure_sankey)],id='sankey', className='sankey'),
-#                                 html.Div([dcc.Graph(figure=figure_bar)],id='hora-recorrido', className='hora-recorrido')], id= 'espacio-narrativa', className='espacio-narrativa')])
+
+estilo_graficas= {'responsive': True,
+                  'autosizable': True,
+                  'displaylogo': False}
 
 app.layout= html.Div([html.Header([html.Div([html.H1('Ecobici')], id='titulo-app', className='titulo-app'),
                                    html.A([html.Img(src=app.get_asset_url('github.png'), alt='logo github',
                                                     className='logo-github')], href='https://github.com/paupradel/ecobici_viz')]),
-                      html.Div([dcc.Graph(figure=figure_mapa, id='mapa', className='mapa'),
-                                html.Div([html.H6(edad_promedio_usuario),
-                                          html.P('Edad de usuarios')], id='edades', className='mini_container'),
-                                html.Img(src=app.get_asset_url(porcentaje_genero), alt='porcentaje_genero', className='genero'),
-                                dcc.Graph(figure=figure_sankey, id='sankey', className='sankey'),
-                                dcc.Graph(figure=figure_bar, id='hora-recorrido', className='hora_recorrido')], className='contenedor-ecobici')
+                      html.Div([dcc.Graph(figure=figure_mapa, id='mapa', className='mapa', config=estilo_graficas),
+                                html.Div([html.P('Edad'),
+                                          html.H1(edad_promedio_usuario, className='edad')], id='edades', className='mini_container-grid-2'),
+                                html.Div([html.P('Género', className='titulo-genero'),
+                                          html.Img(src=app.get_asset_url(porcentaje_genero), id='genero', alt='porcentaje_genero', className='imagen-genero')],
+                                         id='genero-cont', className='genero'),
+                                html.Div(dcc.Graph(figure=figure_sankey, id='sankey', className='sankey-graph', config=estilo_graficas), className='sankey'),
+                                html.Div(dcc.Graph(figure=figure_bar, id='hora_recorrido', className='hora-recorrido-graph', config=estilo_graficas),
+                                         className='hora-recorrido')],
+                               className='contenedor-ecobici')
                       ])
 
 
