@@ -20,7 +20,7 @@ app.index_string= '''
         <link href="https://fonts.googleapis.com/css?family=Raleway:300,400,500,600&display=swap" rel="stylesheet">
         <meta charset= "UTF-8">
         <title>Ecobici</title>
-        {%favicon%}
+        <!--{%favicon%}-->
         {%css%}
     </head>
     <body>
