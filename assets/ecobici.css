@@ -1,11 +1,6 @@
  body {
      margin: 0;
      font-family: 'Raleway', sans-serif;
-     /*background-image: url('/assets/mapa_fondo.png');*/
-     /*background-position: center     center;*/
-     /*background-repeat: no-repeat;*/
-     /*background-attachment: fixed;*/
-     /*background-size: cover;*/
  }
 
  header {
@@ -85,7 +80,7 @@
   border-radius: 5px;
   background-color: #f9f9f9;
   margin-top: 0px;
-  margin-left: 5px;
+  margin-left: 20px;
   margin-right: 10px;
   padding: 5px;
   position: relative;
@@ -98,9 +93,40 @@
 }
 
  .sankey {
+     border-radius: 5px;
+     background-color: #f9f9f9;
+     margin-top: 25px;
+     margin-left: 20px;
+     margin-right: 20px;
+     margin-bottom: 30px;
+     position: relative;
+     box-shadow: 2px 2px 2px lightgrey;
      grid-area: sankey;
  }
 
- .hora_recorrido {
+ .sankey-graph {
+     margin-right: 5px;
+     position: relative;
+     width: auto;
+     height: 100%;
+ }
+
+ .hora-recorrido {
+     border-radius: 5px;
+     background-color: #f9f9f9;
+     margin-top: 25px;
+     margin-left: 20px;
+     margin-right: 20px;
+     margin-bottom: 0px;
+     position: relative;
+     box-shadow: 2px 2px 2px lightgrey;
      grid-area: horarecorrido;
+ }
+
+ .hora-recorrido-graph {
+     margin-right: 5px;
+     position: relative;
+     width: auto;
+     height: 100%;
+
  }
