@@ -20,7 +20,7 @@ app.index_string= '''
         <link href="https://fonts.googleapis.com/css?family=Raleway:300,400,500,600&display=swap" rel="stylesheet">
         <meta charset= "UTF-8">
         <title>Ecobici</title>
-        <!--{%favicon%}-->
+        {%favicon%}
         {%css%}
     </head>
     <body>
@@ -262,6 +262,7 @@ figure_bar= go.Figure(data=data_bar, layout= layout_bar)
 estilo_graficas= {'responsive': True,
                   'autosizable': True,
                   'displaylogo': False}
+
 
 app.layout= html.Div([html.Header([html.Div([html.H1('Ecobici')], id='titulo-app', className='titulo-app'),
                                    html.A([html.Img(src=app.get_asset_url('github.png'), alt='logo github',
