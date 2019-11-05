@@ -1,11 +1,6 @@
  body {
      margin: 0;
      font-family: 'Raleway', sans-serif;
-     /*background-image: url('/assets/mapa_fondo.png');*/
-     /*background-position: center     center;*/
-     /*background-repeat: no-repeat;*/
-     /*background-attachment: fixed;*/
-     /*background-size: cover;*/
  }
 
  header {
@@ -21,11 +16,117 @@
     flex-direction: row;
 }
 
- .mini_container {
+ header .container {
+    display: inline-block;
+    cursor: pointer;
+    padding-left: 5px;
+    padding-bottom: 7px;
+}
+
+ header .titulo-app {
+    position: sticky;
+    height: 50px;
+    padding-bottom: 17px;
+    padding-left: 10px;
+    float: left;
+}
+
+ .contenedor-ecobici {
+    z-index: -1;
+    height: calc(100vh - 95px);
+    display: grid;
+    grid-template-columns: 50% 10% 40%;
+    grid-template-rows: 20% 40% 40%;
+    grid-template-areas: 'mapa edades genero' 'mapa sankey sankey' 'mapa horarecorrido horarecorrido'
+}
+
+ .mapa {
+     padding-top: 0px;
+     grid-area: mapa;
+ }
+
+ .titulo-genero {
+     grid-area: titulogenero
+ }
+
+ .imagen-genero {
+     padding-left: 20px;
+     padding-right: 20px;
+     position: relative;
+     width: auto;
+     height: 100%;
+     grid-area: imagengenero;
+
+ }
+
+ .genero {
+     z-index: -1;
+     display: grid;
+     border-radius: 5px;
+     background-color: #f9f9f9;
+     margin-top: 0px;
+     margin-left: 5px;
+     margin-right: 20px;
+     padding: 5px;
+     position: relative;
+     box-shadow: 2px 2px 2px lightgrey;
+     grid-area: genero;
+     grid-template-columns: 20% 80%;
+     grid-template-rows: 100%;
+     grid-template-areas: 'titulogenero imagengenero'
+ }
+
+ .mini_container-grid-2 {
   border-radius: 5px;
   background-color: #f9f9f9;
-  margin: 10px;
-  padding: 15px;
+  margin-top: 0px;
+  margin-left: 20px;
+  margin-right: 10px;
+  padding: 5px;
   position: relative;
   box-shadow: 2px 2px 2px lightgrey;
+  grid-area: edades
 }
+
+.edad {
+    align-items: center;
+}
+
+ .sankey {
+     border-radius: 5px;
+     background-color: #f9f9f9;
+     margin-top: 25px;
+     margin-left: 20px;
+     margin-right: 20px;
+     margin-bottom: 30px;
+     position: relative;
+     box-shadow: 2px 2px 2px lightgrey;
+     grid-area: sankey;
+ }
+
+ .sankey-graph {
+     margin-right: 5px;
+     position: relative;
+     width: auto;
+     height: 100%;
+ }
+
+ .hora-recorrido {
+     border-radius: 5px;
+     background-color: #f9f9f9;
+     margin-top: 25px;
+     margin-left: 20px;
+     margin-right: 20px;
+     margin-bottom: 0px;
+     position: relative;
+     box-shadow: 2px 2px 2px lightgrey;
+     grid-area: horarecorrido;
+ }
+
+ .hora-recorrido-graph {
+     margin-right: 5px;
+     position: relative;
+     width: auto;
+     height: 100%;
+
+ }
