@@ -57,7 +57,7 @@ geodf = geodf.merge(df_mapa, on='CVE_AGEB')
 geodf['id'] = geodf['CVE_AGEB']
 
 # Convertir geodataframe en geo json y checar su estructura
-geodf.to_file('./data/production_data/ageb_geometry/ageb_geometria.json', driver= 'GeoJSON')
+#geodf.to_file('./data/production_data/ageb_geometry/ageb_geometria.json', driver= 'GeoJSON')
 with open ('./data/production_data/ageb_geometry/ageb_geometria.json') as geofile:
     jdata=json.load(geofile)
 
