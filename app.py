@@ -20,7 +20,7 @@ app.index_string= '''
         <link href="https://fonts.googleapis.com/css?family=Raleway:300,400,500,600&display=swap" rel="stylesheet">
         <meta charset= "UTF-8">
         <title>Ecobici</title>
-        <!--{%favicon%}-->
+        {%favicon%}
         {%css%}
     </head>
     <body>
@@ -263,7 +263,7 @@ estilo_graficas= {'responsive': True,
                   'autosizable': True,
                   'displaylogo': False}
 
-app.layout= html.Div([html.Header([html.Div([html.H1('¿Ecobici o Auto? Que te conviene más')], id='titulo-app', className='titulo-app'),
+app.layout= html.Div([html.Header([html.Div([html.H1('¿Ecobici o Auto? Que te conviene mas')], id='titulo-app', className='titulo-app'),
                                    html.A([html.Img(src=app.get_asset_url('github.png'), alt='logo github',
                                                     className='logo-github')], href='https://github.com/paupradel/ecobici_viz')]),
                       html.Div([dcc.Graph(figure=figure_mapa, id='mapa', className='mapa', config=estilo_graficas),
