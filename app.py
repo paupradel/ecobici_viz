@@ -92,7 +92,7 @@ trace_mapa = go.Choroplethmapbox(z = z,
                                  geojson=jdata,
                                  hoverinfo= 'location',
                                  marker_line_width=0.1,
-                                 marker_opacity=0.5)
+                                 marker_opacity=0.7)
 
 layout_mapa= go.Layout(mapbox= {'center': {'lat': 19.404730,
                                            'lon': -99.172845},
