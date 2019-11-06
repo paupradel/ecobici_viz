@@ -35,7 +35,7 @@ app.index_string= '''
 </html>'''
 
 #---------------------------------CALLBACKS-------------------------------#
-primer_ageb= 790
+primer_ageb=1337
 primer_ageb_str= str(primer_ageb)
 segundo_ageb= 822
 
@@ -170,6 +170,7 @@ df_ve= df_ve[(df_ve['CVE_AGEB_retiro_']==primer_ageb) & (df_ve['CVE_AGEB_arribo_
 edad_promedio_usuario= int(round(df_ve['Edad_Usuario_mean'].mean()))
 
 
+
 def nombre_archivo_cascos():
     """
     Mostrar una imagen dependiendo del porcentaje de hombres y mujeres que hacen viajes en ecobici entre agebs
@@ -288,8 +289,12 @@ app.layout= html.Div([html.Header([html.Div([html.H1('Ecobici')], id='titulo-app
 @app.callback(Output('intermediate-value', 'children'),
               [Input('mapa', 'clickData')])
 def select_ageb(clickData):
-    return json.dumps(clickData, indent=2)
+    # Guardar datos de agebs en forma de json
+    clickData= 1337
+    return print(clickData)
 
+    #Leer el json y actualizar mapa
+    #"df_mapa= pd.read_json()
 
 if __name__ == '__main__':
     app.run_server(debug=True)
