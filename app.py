@@ -7,6 +7,7 @@ import json
 import plotly.graph_objs as go
 
 from dash.dependencies import Input, Output
+from tools.funciones import quitar_ceros, obtener_geojson
 
 # Inicio de app en Dash
 app = dash.Dash(__name__)
@@ -35,46 +36,52 @@ app.index_string= '''
 </html>'''
 
 #---------------------------------CALLBACKS-------------------------------#
-primer_ageb=1337
+primer_ageb=463
 primer_ageb_str= str(primer_ageb)
 segundo_ageb= 822
 
 
 
 #--------------------------------- MAPA -----------------------------------#
-# Leer shapefile y csv
-geodf= gpd.read_file('./data/production_data/ageb_geometry/ageb_geometria.shp')
-df_mapa= pd.read_csv('./data/production_data/distancias_agebs.csv', index_col=0)
+#Leer shapefile y csv
+geodataframe= gpd.read_file('./data/production_data/ageb_geometry/ageb_geometria.shp')
+dataframe= pd.read_csv('./data/production_data/distancias_agebs.csv', index_col=0)
 
-# Corregir ceros a la izquierda
-geodf['CVE_AGEB'] = [''.join(filter(lambda x: x.isdigit(), row)) for row in geodf['CVE_AGEB']]
-geodf['CVE_AGEB'] = geodf['CVE_AGEB'].astype(int)
+geodataframe = quitar_ceros(geodataframe, 'CVE_AGEB')
+geodf_jdata= obtener_geojson(dataframe, geodataframe, 'CVE_AGEB', primer_ageb)
 
-# Reestructurar el dataframe con el ageb seleccionado
-df_mapa= df_mapa.loc[:, df_mapa.columns.isin(['CVE_AGEB', primer_ageb_str])]
+geodf= geodf_jdata[0]
+jdata= geodf_jdata[1]
+print(jdata)
 
-# Unir ambos dataframes
-geodf = geodf.merge(df_mapa, on='CVE_AGEB')
-#geodf.set_index('CVE_AGEB', inplace=True)
-geodf['id'] = geodf['CVE_AGEB']
+# # Reestructurar el dataframe con el ageb seleccionado
+# df_mapa= df_mapa.loc[:, df_mapa.columns.isin(['CVE_AGEB', primer_ageb_str])]
+# print(df_mapa)
+#
+# # Unir ambos dataframes
+# geodf = geodf.merge(df_mapa, on='CVE_AGEB')
+# #geodf.set_index('CVE_AGEB', inplace=True)
+# geodf['id'] = geodf['CVE_AGEB']
+#
+# print(geodf)
+#
+# # Convertir geodataframe en geo json y checar su estructura
+# geodf.to_file('./data/production_data/ageb_geometry/ageb_geometria.json', driver= 'GeoJSON')
+# with open ('./data/production_data/ageb_geometry/ageb_geometria.json') as geofile:
+#     jdata=json.load(geofile)
 
-# Convertir geodataframe en geo json y checar su estructura
-#geodf.to_file('./data/production_data/ageb_geometry/ageb_geometria.json', driver= 'GeoJSON')
-with open ('./data/production_data/ageb_geometry/ageb_geometria.json') as geofile:
-    jdata=json.load(geofile)
-
-def check_geojson(jdata):
-    if 'id' not in jdata['features'][0].keys():
-        if 'properties' in jdata['features'][0].keys():
-            if 'id' in jdata['features'][0]['properties'] and jdata['features'][0]['properties']['id'] is not None:
-                for k, feat in enumerate(jdata['features']):
-                    jdata['features'][k]['id']= feat['properties']['id']
-            else:
-                for k in range(len(jdata['features'])):
-                    jdata['features'][k]['id']= k
-    return jdata
-
-jdata = check_geojson(jdata)
+# def check_geojson(jdata):
+#     if 'id' not in jdata['features'][0].keys():
+#         if 'properties' in jdata['features'][0].keys():
+#             if 'id' in jdata['features'][0]['properties'] and jdata['features'][0]['properties']['id'] is not None:
+#                 for k, feat in enumerate(jdata['features']):
+#                     jdata['features'][k]['id']= feat['properties']['id']
+#             else:
+#                 for k in range(len(jdata['features'])):
+#                     jdata['features'][k]['id']= k
+#     return jdata
+#
+# jdata = check_geojson(jdata)
 
 # Establecer parámetros del mapa
 
@@ -288,13 +295,18 @@ app.layout= html.Div([html.Header([html.Div([html.H1('Ecobici')], id='titulo-app
 
 @app.callback(Output('intermediate-value', 'children'),
               [Input('mapa', 'clickData')])
-def select_ageb(clickData):
+def select_ageb(clickData= 118):
     # Guardar datos de agebs en forma de json
-    clickData= 1337
-    return print(clickData)
+    return clickData
 
     #Leer el json y actualizar mapa
     #"df_mapa= pd.read_json()
+
+@app.callback(Output('mapa', 'figure'),
+              [Input('intermediate-value', 'children')])
+def actualizar_mapa(json_filtrado):
+    datajson = json.loads(json_filtrado)
+    df_actual = pd.read_json(datajson)
 
 if __name__ == '__main__':
     app.run_server(debug=True)
