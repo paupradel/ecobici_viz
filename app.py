@@ -6,6 +6,8 @@ import pandas as pd
 import json
 import plotly.graph_objs as go
 
+from dash.dependencies import Input, Output
+
 # Inicio de app en Dash
 app = dash.Dash(__name__)
 
@@ -101,7 +103,8 @@ layout_mapa= go.Layout(mapbox= {'center': {'lat': 19.404730,
                        margin= {'l': 0,
                                 'r': 0,
                                 't': 5,
-                                'b': 0})
+                                'b': 0},
+                       clickmode= 'event+select')
 
 figure_mapa= go.Figure(data=[trace_mapa], layout=layout_mapa)
 
@@ -276,10 +279,16 @@ app.layout= html.Div([html.Header([html.Div([html.H1('Ecobici')], id='titulo-app
                                 html.Div(dcc.Graph(figure=figure_sankey, id='sankey', className='sankey-graph', config=estilo_graficas), className='sankey'),
                                 html.Div(dcc.Graph(figure=figure_bar, id='hora_recorrido', className='hora-recorrido-graph', config=estilo_graficas),
                                          className='hora-recorrido')],
-                               className='contenedor-ecobici')
+                               className='contenedor-ecobici'),
+                      html.Div(id='intermediate-value', style={'display': 'none'})
                       ])
 
 
+
+@app.callback(Output('intermediate-value', 'children'),
+              [Input('mapa', 'clickData')])
+def select_ageb(clickData):
+    return json.dumps(clickData, indent=2)
 
 
 if __name__ == '__main__':
