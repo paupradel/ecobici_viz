@@ -303,7 +303,7 @@ def select_ageb(clickData= 118):
 
 @app.callback(Output('mapa', 'figure'),
               [Input('intermediate-value', 'children')])
-def actualizar_mapa(json_filtrado):
+def actualizar_mapa(json0_filtrado):
     datajson = json.loads(json_filtrado)
     df_actual = pd.read_json(datajson)
 
