@@ -36,7 +36,7 @@ app.index_string= '''
 </html>'''
 
 #---------------------------------CALLBACKS-------------------------------#
-primer_ageb=463
+primer_ageb=118
 primer_ageb_str= str(primer_ageb)
 segundo_ageb= 822
 
@@ -52,7 +52,6 @@ geodf_jdata= obtener_geojson(dataframe, geodataframe, 'CVE_AGEB', primer_ageb)
 
 geodf= geodf_jdata[0]
 jdata= geodf_jdata[1]
-print(jdata)
 
 # # Reestructurar el dataframe con el ageb seleccionado
 # df_mapa= df_mapa.loc[:, df_mapa.columns.isin(['CVE_AGEB', primer_ageb_str])]
