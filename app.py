@@ -7,7 +7,7 @@ import json
 import plotly.graph_objs as go
 
 from dash.dependencies import Input, Output
-from tools.funciones import quitar_ceros, obtener_geojson
+from tools.funciones import quitar_ceros, obtenergeo_json_df
 
 # Inicio de app en Dash
 app = dash.Dash(__name__)
@@ -48,10 +48,46 @@ geodataframe= gpd.read_file('./data/production_data/ageb_geometry/ageb_geometria
 dataframe= pd.read_csv('./data/production_data/distancias_agebs.csv', index_col=0)
 
 geodataframe = quitar_ceros(geodataframe, 'CVE_AGEB')
-geodf_jdata= obtener_geojson(dataframe, geodataframe, 'CVE_AGEB', primer_ageb)
 
-geodf= geodf_jdata[0]
-jdata= geodf_jdata[1]
+def dibujar_mapa(pri_ageb):
+    geodf_jdata= obtenergeo_json_df(dataframe, geodataframe, 'CVE_AGEB', pri_ageb)
+
+    geodf= geodf_jdata[0]
+    jdata= geodf_jdata[1]
+
+    z = geodf[primer_ageb_str].tolist()
+
+    locations = geodf['CVE_AGEB'].tolist()
+
+    trace_mapa = go.Choroplethmapbox(z=z,
+                                     locations=locations,
+                                     colorscale='magma',
+                                     colorbar={'thicknessmode': 'pixels',
+                                               'thickness': 7,
+                                               'outlinecolor': 'white',
+                                               'title': {'text': 'km',
+                                                         'side': 'bottom'}},
+                                     reversescale=True,
+                                     geojson=jdata,
+                                     hoverinfo='location',
+                                     marker_line_width=0.1,
+                                     marker_opacity=0.7)
+
+    layout_mapa = go.Layout(mapbox={'center': {'lat': 19.404730,
+                                               'lon': -99.172845},
+                                    'style': 'carto-positron',
+                                    'zoom': 12},
+                            margin={'l': 0,
+                                    'r': 0,
+                                    't': 5,
+                                    'b': 0},
+                            clickmode='event+select')
+
+    figure_mapa = go.Figure(data=[trace_mapa], layout=layout_mapa)
+
+    return figure_mapa
+
+figure_mapa=dibujar_mapa(118)
 
 # # Reestructurar el dataframe con el ageb seleccionado
 # df_mapa= df_mapa.loc[:, df_mapa.columns.isin(['CVE_AGEB', primer_ageb_str])]
@@ -84,35 +120,35 @@ jdata= geodf_jdata[1]
 
 # Establecer parámetros del mapa
 
-z = geodf[primer_ageb_str].tolist()
-locations = geodf['CVE_AGEB'].tolist()
+
 
 # Dibujar mapa
-trace_mapa = go.Choroplethmapbox(z = z,
-                                 locations=locations,
-                                 colorscale= 'magma',
-                                 colorbar= {'thicknessmode': 'pixels',
-                                            'thickness': 7,
-                                            'outlinecolor': 'white',
-                                            'title': {'text': 'km',
-                                                      'side': 'bottom'}},
-                                 reversescale=True,
-                                 geojson=jdata,
-                                 hoverinfo= 'location',
-                                 marker_line_width=0.1,
-                                 marker_opacity=0.7)
 
-layout_mapa= go.Layout(mapbox= {'center': {'lat': 19.404730,
-                                           'lon': -99.172845},
-                                'style': 'carto-positron',
-                                'zoom': 12},
-                       margin= {'l': 0,
-                                'r': 0,
-                                't': 5,
-                                'b': 0},
-                       clickmode= 'event+select')
-
-figure_mapa= go.Figure(data=[trace_mapa], layout=layout_mapa)
+# trace_mapa = go.Choroplethmapbox(z = z,
+#                                  locations=locations,
+#                                  colorscale= 'magma',
+#                                  colorbar= {'thicknessmode': 'pixels',
+#                                             'thickness': 7,
+#                                             'outlinecolor': 'white',
+#                                             'title': {'text': 'km',
+#                                                       'side': 'bottom'}},
+#                                  reversescale=True,
+#                                  geojson=jdata,
+#                                  hoverinfo= 'location',
+#                                  marker_line_width=0.1,
+#                                  marker_opacity=0.7)
+#
+# layout_mapa= go.Layout(mapbox= {'center': {'lat': 19.404730,
+#                                            'lon': -99.172845},
+#                                 'style': 'carto-positron',
+#                                 'zoom': 12},
+#                        margin= {'l': 0,
+#                                 'r': 0,
+#                                 't': 5,
+#                                 'b': 0},
+#                        clickmode= 'event+select')
+#
+# figure_mapa= go.Figure(data=[trace_mapa], layout=layout_mapa)
 
 #-----------------------------------SANKEY----------------------------------------#
 
@@ -292,20 +328,29 @@ app.layout= html.Div([html.Header([html.Div([html.H1('¿Ecobici o Auto? Que te c
 
 
 
-@app.callback(Output('intermediate-value', 'children'),
-              [Input('mapa', 'clickData')])
-def select_ageb(clickData= 118):
-    # Guardar datos de agebs en forma de json
-    return clickData
-
-    #Leer el json y actualizar mapa
-    #"df_mapa= pd.read_json()
-
 @app.callback(Output('mapa', 'figure'),
-              [Input('intermediate-value', 'children')])
-def actualizar_mapa(json0_filtrado):
-    datajson = json.loads(json_filtrado)
-    df_actual = pd.read_json(datajson)
+              [Input('mapa', 'clickData')])
+def select_ageb(clickData):
+    seleccion= []
+    seleccion.append(clickData['points'][0]['location'])
+    pri_ageb= seleccion[0]
+    figure_mapa = dibujar_mapa(pri_ageb)
+    return figure_mapa
+
+
+# @app.callback(Output('mapa', 'figure'),
+#               [Input('intermediate-value', 'children')])
+# def actualizar_mapa(json_seleccion):
+#     datajson = json.loads(json_seleccion)
+#     df__ = pd.read_json(datajson)
+#     print(df__)
+    # primer_ageb_ = datajson['points'][0]['location']
+    # print(primer_ageb_)
+    # datajson = json.loads(json_seleccion)
+    # primer_ageb= datajson[]
+    # segundo_ageb
+    # df_actual = pd.read_json(datajson)
+    # print(df_actual)
 
 if __name__ == '__main__':
     app.run_server(debug=True)

@@ -20,7 +20,7 @@ def checar_geojson(jdata):
                     jdata['features'][k]['id']= k
     return jdata
 
-def obtener_geojson(dataframe, geodataframe, columna, primer_ageb):
+def obtenergeo_json_df(dataframe, geodataframe, columna, primer_ageb):
     '''Reestructurar el dataframe y hacer merge con el dataframe, para obtener el geojson adecuado'''
     primer_ageb_str= str(primer_ageb)
 
@@ -32,7 +32,6 @@ def obtener_geojson(dataframe, geodataframe, columna, primer_ageb):
     geodataframe['id'] = geodataframe[columna]
 
     # Convertir el geodataframe en geojson
-    #geodataframe.to_file('./data/production_data/ageb_geometry/ageb_distancias.json', driver='GeoJSON')
     with open('./data/production_data/ageb_geometry/ageb_distancias.json') as geofile:
         jdata = json.load(geofile)
 
