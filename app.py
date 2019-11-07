@@ -37,20 +37,22 @@ app.index_string= '''
 
 #---------------------------------CALLBACKS-------------------------------#
 primer_ageb=118
-primer_ageb_str= str(primer_ageb)
 segundo_ageb= 822
 
-
-
-#--------------------------------- MAPA -----------------------------------#
 #Leer shapefile y csv
 geodataframe= gpd.read_file('./data/production_data/ageb_geometry/ageb_geometria.shp')
 dataframe= pd.read_csv('./data/production_data/distancias_agebs.csv', index_col=0)
+df_ve= pd.read_csv('./data/production_data/viajes_ecobici.csv')
 
+#---------------------- ESTRUCTURACIÓN DE DATAFRAMES-----------------------#
+df_ve['Hora_Retiro_bin']=df_ve['Hora_Retiro_bin_']
 geodataframe = quitar_ceros(geodataframe, 'CVE_AGEB')
 
-def dibujar_mapa(pri_ageb):
-    geodf_jdata= obtenergeo_json_df(dataframe, geodataframe, 'CVE_AGEB', pri_ageb)
+#---------------------------------MAPA--------------------------------------#
+
+def dibujar_mapa(primer_ageb):
+    primer_ageb_str= str(primer_ageb)
+    geodf_jdata= obtenergeo_json_df(dataframe, geodataframe, 'CVE_AGEB', primer_ageb)
 
     geodf= geodf_jdata[0]
     jdata= geodf_jdata[1]
@@ -80,7 +82,7 @@ def dibujar_mapa(pri_ageb):
                             margin={'l': 0,
                                     'r': 0,
                                     't': 5,
-                                    'b': 0},
+                                    'b': 15},
                             clickmode='event+select')
 
     figure_mapa = go.Figure(data=[trace_mapa], layout=layout_mapa)
@@ -88,67 +90,6 @@ def dibujar_mapa(pri_ageb):
     return figure_mapa
 
 figure_mapa=dibujar_mapa(118)
-
-# # Reestructurar el dataframe con el ageb seleccionado
-# df_mapa= df_mapa.loc[:, df_mapa.columns.isin(['CVE_AGEB', primer_ageb_str])]
-# print(df_mapa)
-#
-# # Unir ambos dataframes
-# geodf = geodf.merge(df_mapa, on='CVE_AGEB')
-# #geodf.set_index('CVE_AGEB', inplace=True)
-# geodf['id'] = geodf['CVE_AGEB']
-#
-# print(geodf)
-#
-# # Convertir geodataframe en geo json y checar su estructura
-# geodf.to_file('./data/production_data/ageb_geometry/ageb_geometria.json', driver= 'GeoJSON')
-# with open ('./data/production_data/ageb_geometry/ageb_geometria.json') as geofile:
-#     jdata=json.load(geofile)
-
-# def check_geojson(jdata):
-#     if 'id' not in jdata['features'][0].keys():
-#         if 'properties' in jdata['features'][0].keys():
-#             if 'id' in jdata['features'][0]['properties'] and jdata['features'][0]['properties']['id'] is not None:
-#                 for k, feat in enumerate(jdata['features']):
-#                     jdata['features'][k]['id']= feat['properties']['id']
-#             else:
-#                 for k in range(len(jdata['features'])):
-#                     jdata['features'][k]['id']= k
-#     return jdata
-#
-# jdata = check_geojson(jdata)
-
-# Establecer parámetros del mapa
-
-
-
-# Dibujar mapa
-
-# trace_mapa = go.Choroplethmapbox(z = z,
-#                                  locations=locations,
-#                                  colorscale= 'magma',
-#                                  colorbar= {'thicknessmode': 'pixels',
-#                                             'thickness': 7,
-#                                             'outlinecolor': 'white',
-#                                             'title': {'text': 'km',
-#                                                       'side': 'bottom'}},
-#                                  reversescale=True,
-#                                  geojson=jdata,
-#                                  hoverinfo= 'location',
-#                                  marker_line_width=0.1,
-#                                  marker_opacity=0.7)
-#
-# layout_mapa= go.Layout(mapbox= {'center': {'lat': 19.404730,
-#                                            'lon': -99.172845},
-#                                 'style': 'carto-positron',
-#                                 'zoom': 12},
-#                        margin= {'l': 0,
-#                                 'r': 0,
-#                                 't': 5,
-#                                 'b': 0},
-#                        clickmode= 'event+select')
-#
-# figure_mapa= go.Figure(data=[trace_mapa], layout=layout_mapa)
 
 #-----------------------------------SANKEY----------------------------------------#
 
@@ -203,13 +144,11 @@ figure_sankey= go.Figure(data= data_sankey, layout= layout_sankey)
 #--------------------------------- Big number y porcentaje por género------------------------------------#
 
 #Leer archivo de viajes de ecobici
-df_ve= pd.read_csv('./data/production_data/viajes_ecobici.csv')
-df_ve['Hora_Retiro_bin']=df_ve['Hora_Retiro_bin_']
+def edad(primer_ageb):
+    df_ve = df_ve[(df_ve['CVE_AGEB_retiro_']==primer_ageb) & (df_ve['CVE_AGEB_arribo_']==segundo_ageb)]
+    edad_promedio_usuario= int(round(df_ve['Edad_Usuario_mean'].mean()))
 
-df_ve= df_ve[(df_ve['CVE_AGEB_retiro_']==primer_ageb) & (df_ve['CVE_AGEB_arribo_']==segundo_ageb)]
-
-#Establecer variable para la edad promedio del usuario
-edad_promedio_usuario= int(round(df_ve['Edad_Usuario_mean'].mean()))
+    return edad_promedio_usuario
 
 
 
@@ -303,6 +242,9 @@ layout_bar= go.Layout(title_text= 'Auto VS Bicicleta',
 
 figure_bar= go.Figure(data=data_bar, layout= layout_bar)
 
+click_data_inicial = {'points': [{'curveNumber': 0, 'pointNumber': 103, 'pointIndex': 103, 'location': 118, 'z': 3.67}]}
+
+
 #--------------------------------- Layout de la app-------------------------------#
 
 estilo_graficas= {'responsive': True,
@@ -313,44 +255,36 @@ estilo_graficas= {'responsive': True,
 app.layout= html.Div([html.Header([html.Div([html.H1('¿Ecobici o Auto? Que te conviene más')], id='titulo-app', className='titulo-app'),
                                    html.A([html.Img(src=app.get_asset_url('github.png'), alt='logo github',
                                                     className='logo-github')], href='https://github.com/paupradel/ecobici_viz')]),
-                      html.Div([dcc.Graph(figure=figure_mapa, id='mapa', className='mapa', config=estilo_graficas),
+                      html.Div([html.Div(dcc.Graph(figure=figure_mapa, id='mapa-graph', className='mapa-graph', clickData= click_data_inicial,
+                                          config=estilo_graficas), id='mapa', className='mapa'),
                                 html.Div([html.P('Edad'),
-                                          html.H1(edad_promedio_usuario, className='edad')], id='edades', className='mini_container-grid-2'),
+                                          html.H1(id='edad', className='edad')], id='edades', className='mini_container-grid-2'),
                                 html.Div([html.P('Género', className='titulo-genero'),
                                           html.Img(src=app.get_asset_url(porcentaje_genero), id='genero', alt='porcentaje_genero', className='imagen-genero')],
                                          id='genero-cont', className='genero'),
                                 html.Div(dcc.Graph(figure=figure_sankey, id='sankey', className='sankey-graph', config=estilo_graficas), className='sankey'),
                                 html.Div(dcc.Graph(figure=figure_bar, id='hora_recorrido', className='hora-recorrido-graph', config=estilo_graficas),
                                          className='hora-recorrido')],
-                               className='contenedor-ecobici'),
-                      html.Div(id='intermediate-value', style={'display': 'none'})
+                               className='contenedor-ecobici')
+                      # html.Div(id='intermediate-value', style={'display': 'none'})
                       ])
 
 
+num_clicks = []
 
-@app.callback(Output('mapa', 'figure'),
-              [Input('mapa', 'clickData')])
+@app.callback(Output('mapa-graph', 'figure'),
+              [Input('mapa-graph', 'clickData')])
 def select_ageb(clickData):
-    seleccion= []
-    seleccion.append(clickData['points'][0]['location'])
-    pri_ageb= seleccion[0]
-    figure_mapa = dibujar_mapa(pri_ageb)
+    num_clicks.append(clickData)
+    if len(num_clicks) >= 1 and len(num_clicks) <2 :
+        primer_ageb_data = num_clicks[1]
+        primer_ageb = primer_ageb_data['points'][0]['location']
+    if len(num_clicks) >= 2:
+        segundo_ageb_data = num_clicks[-1]
+        segundo_ageb = segundo_ageb_data['points'][0]['location']
+
+    figure_mapa = dibujar_mapa(primer_ageb)
     return figure_mapa
-
-
-# @app.callback(Output('mapa', 'figure'),
-#               [Input('intermediate-value', 'children')])
-# def actualizar_mapa(json_seleccion):
-#     datajson = json.loads(json_seleccion)
-#     df__ = pd.read_json(datajson)
-#     print(df__)
-    # primer_ageb_ = datajson['points'][0]['location']
-    # print(primer_ageb_)
-    # datajson = json.loads(json_seleccion)
-    # primer_ageb= datajson[]
-    # segundo_ageb
-    # df_actual = pd.read_json(datajson)
-    # print(df_actual)
 
 if __name__ == '__main__':
     app.run_server(debug=True)

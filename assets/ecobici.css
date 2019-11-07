@@ -32,7 +32,6 @@
 }
 
  .contenedor-ecobici {
-    z-index: -1;
     height: calc(100vh - 95px);
     display: grid;
     grid-template-columns: 50% 10% 40%;
@@ -40,9 +39,27 @@
     grid-template-areas: 'mapa edades genero' 'mapa sankey sankey' 'mapa horarecorrido horarecorrido'
 }
 
+
  .mapa {
-     padding-top: 0px;
+     height: 100%;
+     margin: 0;
+     margin-bottom: 10px;
+     padding:0;
+     position: absolute;
      grid-area: mapa;
+ }
+
+ .mapa-graph {
+     height: 95%;
+     margin-bottom: 10px;
+     padding:0;
+     position: absolute;
+ }
+
+ .mapa mapa-graph {
+     display: block;
+     width: 100%;
+     border: 0;
  }
 
  .titulo-genero {
