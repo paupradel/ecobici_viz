@@ -32,7 +32,7 @@ def obtener_geojson(dataframe, geodataframe, columna, primer_ageb):
     geodataframe['id'] = geodataframe[columna]
 
     # Convertir el geodataframe en geojson
-    geodataframe.to_file('./data/production_data/ageb_geometry/ageb_distancias.json', driver='GeoJSON')
+    #geodataframe.to_file('./data/production_data/ageb_geometry/ageb_distancias.json', driver='GeoJSON')
     with open('./data/production_data/ageb_geometry/ageb_distancias.json') as geofile:
         jdata = json.load(geofile)
 
