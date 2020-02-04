@@ -4,7 +4,7 @@ import json
 
 
 def quitar_ceros(geodataframe, columna):
-    '''Coregir ceros a la izquierda'''
+    '''Corregir ceros a la izquierda'''
     geodataframe[columna] = [''.join(filter(lambda x: x.isdigit(), row)) for row in geodataframe[columna]]
     geodataframe[columna] = geodataframe[columna].astype(int)
     return geodataframe
