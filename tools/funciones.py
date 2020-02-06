@@ -4,7 +4,7 @@ import json
 
 
 def quitar_ceros(geodataframe, columna):
-    '''Corregir ceros a la izquierda'''
+    """Corregir ceros a la izquierda"""
     geodataframe[columna] = [''.join(filter(lambda x: x.isdigit(), row)) for row in geodataframe[columna]]
     geodataframe[columna] = geodataframe[columna].astype(int)
     return geodataframe
@@ -21,7 +21,7 @@ def checar_geojson(jdata):
     return jdata
 
 def obtenergeo_json_df(dataframe, geodataframe, columna, primer_ageb):
-    '''Reestructurar el dataframe y hacer merge con el dataframe, para obtener el geojson adecuado'''
+    """Reestructurar el dataframe y hacer merge con el dataframe, para obtener el geojson adecuado"""
     primer_ageb_str= str(primer_ageb)
 
     # Filtrar el dataframe y unir con el geodataframe

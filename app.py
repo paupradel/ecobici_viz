@@ -270,11 +270,11 @@ app.layout= html.Div([html.Header([html.Div([html.H1('¿Ecobici o Auto? Que te c
                       ])
 
 
-num_clicks = []
 
 @app.callback(Output('mapa-graph', 'figure'),
               [Input('mapa-graph', 'clickData')])
 def select_ageb(clickData):
+    num_clicks = []
     num_clicks.append(clickData)
     if len(num_clicks) >= 1 and len(num_clicks) <2 :
         primer_ageb_data = num_clicks[0]
