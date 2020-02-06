@@ -85,9 +85,9 @@ def dibujar_mapa(primer_ageb):
                                     'b': 15},
                             clickmode='event+select')
 
-    figure_mapa = go.Figure(data=[trace_mapa], layout=layout_mapa)
+    figura_mapa = go.Figure(data=[trace_mapa], layout=layout_mapa)
 
-    return figure_mapa
+    return figura_mapa
 
 figure_mapa=dibujar_mapa(118)
 
@@ -277,7 +277,7 @@ num_clicks = []
 def select_ageb(clickData):
     num_clicks.append(clickData)
     if len(num_clicks) >= 1 and len(num_clicks) <2 :
-        primer_ageb_data = num_clicks[1]
+        primer_ageb_data = num_clicks[0]
         primer_ageb = primer_ageb_data['points'][0]['location']
     if len(num_clicks) >= 2:
         segundo_ageb_data = num_clicks[-1]
