@@ -280,7 +280,6 @@ app.layout= html.Div([html.Header([html.Div([html.H1('¿Ecobici o Auto? Que te c
                       ])
 
 
-
 @app.callback([Output('mapa-graph', 'figure'),
                Output('sankey', 'figure')],
               [Input('mapa-graph', 'clickData')])
@@ -289,14 +288,15 @@ def select_ageb(clickData):
     segundo_ageb=822
     num_clicks = []
     num_clicks.append(clickData)
+    print(num_clicks)
     if len(num_clicks) >= 1 and len(num_clicks) <2 :
         primer_ageb_data = num_clicks[0]
         primer_ageb = primer_ageb_data['points'][0]['location']
     if len(num_clicks) >= 2:
         segundo_ageb_data = num_clicks[-1]
         segundo_ageb = segundo_ageb_data['points'][0]['location']
+        print(segundo_ageb)
 
-    # print(num_clicks)
     figura_mapa_actualizado = dibujar_mapa(primer_ageb)
     figure_sankey_actualizado = dibujar_sankey(primer_ageb, segundo_ageb)
 
