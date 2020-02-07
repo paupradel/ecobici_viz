@@ -36,8 +36,8 @@ app.index_string= '''
 </html>'''
 
 #---------------------------------CALLBACKS-------------------------------#
-primer_ageb=118
-segundo_ageb= 822
+# primer_ageb=118
+# segundo_ageb= 822
 
 #Leer shapefile y csv
 geodataframe= gpd.read_file('./data/production_data/ageb_geometry/ageb_geometria.shp')
@@ -92,34 +92,34 @@ def dibujar_mapa(primer_ageb):
 figure_mapa=dibujar_mapa(118)
 
 #-----------------------------------SANKEY----------------------------------------#
-
-# Leer archivo para datos de sankey
-df_sankey= pd.read_csv('./data/production_data/viajes_ecobici_entre_estaciones.csv')
-
-# Filtrar dataframe
-df_sankey= df_sankey[(df_sankey['CVE_AGEB_retiro']==primer_ageb) & (df_sankey['CVE_AGEB_arribo']==segundo_ageb)]
-
-# Estructura de sankey
-estaciones_retiro= df_sankey['nombre_estacion_retiro'].unique().tolist()
-estaciones_arribo= df_sankey['nombre_estacion_arribo'].unique().tolist()
-
-label= estaciones_retiro + estaciones_arribo
-
-indices_retiro= list(range(len(estaciones_retiro)))
-indices_arribo= list(range(len(estaciones_retiro), len(label)))
-
-source= indices_retiro*len(indices_arribo)
-
 def duplicate_target(indices_arribo, n):
     return [element for element in indices_arribo for _ in range(n)]
 
-target= duplicate_target(indices_arribo, len(indices_retiro))
+def dibujar_sankey(primer_ageb, segundo_ageb):
+    # Leer archivo para datos de sankey
+    df_sankey= pd.read_csv('./data/production_data/viajes_ecobici_entre_estaciones.csv')
 
-value= df_sankey['Numero_de_viajes'].tolist()
+    # Filtrar dataframe
+    df_sankey= df_sankey[(df_sankey['CVE_AGEB_retiro']==primer_ageb) & (df_sankey['CVE_AGEB_arribo']==segundo_ageb)]
 
-# Dibujar sankey
+    # Estructura de sankey
+    estaciones_retiro= df_sankey['nombre_estacion_retiro'].unique().tolist()
+    estaciones_arribo= df_sankey['nombre_estacion_arribo'].unique().tolist()
 
-data_sankey= go.Sankey(node= {'pad': 15,
+    label= estaciones_retiro + estaciones_arribo
+
+    indices_retiro= list(range(len(estaciones_retiro)))
+    indices_arribo= list(range(len(estaciones_retiro), len(label)))
+
+    source= indices_retiro*len(indices_arribo)
+
+    target= duplicate_target(indices_arribo, len(indices_retiro))
+
+    value= df_sankey['Numero_de_viajes'].tolist()
+
+    # Dibujar sankey
+
+    data_sankey= go.Sankey(node= {'pad': 15,
                               'thickness': 10,
                               'line': {'color': 'black',
                                        'width': 0.5},
@@ -131,7 +131,7 @@ data_sankey= go.Sankey(node= {'pad': 15,
                        textfont= {'family': 'Raleway'})
 
 
-layout_sankey=go.Layout(title_text= 'Viajes entre estaciones (retiro a arribo)',
+    layout_sankey=go.Layout(title_text= 'Viajes entre estaciones (retiro a arribo)',
                         font= {'family': 'Raleway'},
                         margin={'l': 0,
                                 'r': 5,
@@ -139,17 +139,20 @@ layout_sankey=go.Layout(title_text= 'Viajes entre estaciones (retiro a arribo)',
                                 'b': 5},
                         plot_bgcolor= '#f9f9f9')
 
-figure_sankey= go.Figure(data= data_sankey, layout= layout_sankey)
+    figure_sankey= go.Figure(data= data_sankey, layout= layout_sankey)
+
+    return(figure_sankey)
+
+figure_sankey=dibujar_sankey(118, 822)
 
 #--------------------------------- Big number y porcentaje por género------------------------------------#
 
 #Leer archivo de viajes de ecobici
-def edad(primer_ageb):
+def edad(primer_ageb, segundo_ageb, df_ve=df_ve):
     df_ve = df_ve[(df_ve['CVE_AGEB_retiro_']==primer_ageb) & (df_ve['CVE_AGEB_arribo_']==segundo_ageb)]
     edad_promedio_usuario= int(round(df_ve['Edad_Usuario_mean'].mean()))
 
     return edad_promedio_usuario
-
 
 
 def nombre_archivo_cascos():
@@ -186,10 +189,9 @@ def nombre_archivo_cascos():
 
 porcentaje_genero= str(nombre_archivo_cascos())
 
-#---------------------------------Grafica de barras-------------------------------#
+edad_seleccion=edad(118, 822)
 
-# Datos uber
-df_uber = pd.read_csv('./data/production_data/viajes_uber.csv')
+#---------------------------------Grafica de barras-------------------------------#
 
 # Asignar bote
 def asignar_bote(df, columna= 'Hora_Retiro_bin'):
@@ -206,27 +208,31 @@ def asignar_bote(df, columna= 'Hora_Retiro_bin'):
     if df[columna]=='22-1':
         return 5
 
-# Asignar columna de periodo y reordenar dataframes
-df_uber['periodo']= df_uber.apply(asignar_bote, axis=1)
-df_ve['periodo']= df_ve.apply(asignar_bote, axis=1)
+def dibujar_barras(primer_ageb, segundo_ageb, df_ve=df_ve):
+    # Datos uber
+    df_uber = pd.read_csv('./data/production_data/viajes_uber.csv')
 
-# Filtrar datos
-df_uber = df_uber[(df_uber['sourceid'] == primer_ageb) & (df_uber['dstid'] == segundo_ageb)]
+    # Asignar columna de periodo y reordenar dataframes
+    df_uber['periodo']= df_uber.apply(asignar_bote, axis=1)
+    df_ve['periodo']= df_ve.apply(asignar_bote, axis=1)
 
-df_uber= df_uber.sort_values(by='periodo', ascending=True)
-df_ve= df_ve.sort_values(by='periodo', ascending=True)
+    # Filtrar datos
+    df_uber = df_uber[(df_uber['sourceid'] == primer_ageb) & (df_uber['dstid'] == segundo_ageb)]
 
-# Establecer datos en x y y
-x_uber=df_uber['Hora_Retiro_bin']
-y_uber=df_uber['mean_travel_time']
-x_ecobici=df_ve['Hora_Retiro_bin']
-y_ecobici=df_ve['duracion_viaje_minutos_mean']
+    df_uber= df_uber.sort_values(by='periodo', ascending=True)
+    df_ve= df_ve.sort_values(by='periodo', ascending=True)
 
-#Datos y layout
-data_bar= [go.Bar(name= 'ecobici',x=x_ecobici,y=y_ecobici, marker_color= '#00b386'),
+    # Establecer datos en x y y
+    x_uber=df_uber['Hora_Retiro_bin']
+    y_uber=df_uber['mean_travel_time']
+    x_ecobici=df_ve['Hora_Retiro_bin']
+    y_ecobici=df_ve['duracion_viaje_minutos_mean']
+
+    #Datos y layout
+    data_bar= [go.Bar(name= 'ecobici',x=x_ecobici,y=y_ecobici, marker_color= '#00b386'),
            go.Bar(name= 'uber', x=x_uber, y=y_uber, marker_color= 'purple')]
 
-layout_bar= go.Layout(title_text= 'Auto VS Bicicleta',
+    layout_bar= go.Layout(title_text= 'Auto VS Bicicleta',
                       barmode= 'group',
                       xaxis= {'type': 'category',
                               'title': 'periodo del día',
@@ -240,7 +246,11 @@ layout_bar= go.Layout(title_text= 'Auto VS Bicicleta',
                               'b': 8},
                       plot_bgcolor='#f9f9f9')
 
-figure_bar= go.Figure(data=data_bar, layout= layout_bar)
+    figure_bar= go.Figure(data=data_bar, layout= layout_bar)
+
+    return figure_bar
+
+figure_bar=dibujar_barras(118, 822)
 
 click_data_inicial = {'points': [{'curveNumber': 0, 'pointNumber': 103, 'pointIndex': 103, 'location': 118, 'z': 3.67}]}
 
@@ -258,7 +268,7 @@ app.layout= html.Div([html.Header([html.Div([html.H1('¿Ecobici o Auto? Que te c
                       html.Div([html.Div(dcc.Graph(figure=figure_mapa, id='mapa-graph', className='mapa-graph', clickData= click_data_inicial,
                                           config=estilo_graficas), id='mapa', className='mapa'),
                                 html.Div([html.P('Edad'),
-                                          html.H1(id='edad', className='edad')], id='edades', className='mini_container-grid-2'),
+                                          html.H1(edad_seleccion, id='edad', className='edad')], id='edades', className='mini_container-grid-2'),
                                 html.Div([html.P('Género', className='titulo-genero'),
                                           html.Img(src=app.get_asset_url(porcentaje_genero), id='genero', alt='porcentaje_genero', className='imagen-genero')],
                                          id='genero-cont', className='genero'),
@@ -279,12 +289,15 @@ def select_ageb(clickData):
     if len(num_clicks) >= 1 and len(num_clicks) <2 :
         primer_ageb_data = num_clicks[0]
         primer_ageb = primer_ageb_data['points'][0]['location']
+        # print(primer_ageb)
     if len(num_clicks) >= 2:
         segundo_ageb_data = num_clicks[-1]
         segundo_ageb = segundo_ageb_data['points'][0]['location']
+        # print(segundo_ageb)
 
-    figure_mapa = dibujar_mapa(primer_ageb)
-    return figure_mapa
+    # print(num_clicks)
+    figura_mapa_actualizado = dibujar_mapa(primer_ageb)
+    return figura_mapa_actualizado
 
 if __name__ == '__main__':
     app.run_server(debug=True)
