@@ -4,7 +4,7 @@ import dash_html_components as html
 import geopandas as gpd
 import pandas as pd
 import plotly.graph_objs as go
-from dash.dependencies import Input, Output
+from dash.dependencies import Input, Output, State
 
 from tools.funciones import quitar_ceros, obtenergeo_json_df
 
@@ -90,7 +90,7 @@ def dibujar_mapa(primer_ageb):
     return figura_mapa
 
 
-figure_mapa = dibujar_mapa(ageb_final_default)
+figure_mapa = dibujar_mapa(ageb_inicial_default)
 
 
 # -----------------------------------SANKEY----------------------------------------#
@@ -195,7 +195,7 @@ def nombre_archivo_cascos():
 
 porcentaje_genero = str(nombre_archivo_cascos())
 
-edad_seleccion = edad(ageb_final_default, ageb_final_default)
+edad_seleccion = edad(ageb_inicial_default, ageb_final_default)
 
 
 # ---------------------------------Grafica de barras-------------------------------#
@@ -261,7 +261,8 @@ def dibujar_barras(primer_ageb, segundo_ageb, df_ve=df_ve):
 
 figure_bar = dibujar_barras(ageb_inicial_default, ageb_final_default)
 
-click_data_inicial = {'points': [{'curveNumber': 0, 'pointNumber': 103, 'pointIndex': 103, 'location': ageb_inicial_default, 'z': 3.67}]}
+click_data_inicial = {
+    'points': [{'curveNumber': 0, 'pointNumber': 103, 'pointIndex': 103, 'location': ageb_inicial_default, 'z': 3.67}]}
 
 # --------------------------------- Layout de la app-------------------------------#
 
@@ -269,51 +270,46 @@ estilo_graficas = {'responsive': True,
                    'autosizable': True,
                    'displaylogo': False}
 
-app.layout = html.Div(
-    [html.Header([html.Div([html.H1('¿Ecobici o Auto? Que te conviene más')], id='titulo-app', className='titulo-app'),
-                  html.A([html.Img(src=app.get_asset_url('github.png'), alt='logo github',
-                                   className='logo-github')], href='https://github.com/paupradel/ecobici_viz')]),
-     html.Div(
-         [html.Div(dcc.Graph(figure=figure_mapa, id='mapa-graph', className='mapa-graph', clickData=click_data_inicial,
-                             config=estilo_graficas), id='mapa', className='mapa'),
-          html.Div([html.P('Edad'),
-                    html.H1(edad_seleccion, id='edad', className='edad')], id='edades',
-                   className='mini_container-grid-2'),
-          html.Div([html.P('Género', className='titulo-genero'),
-                    html.Img(src=app.get_asset_url(porcentaje_genero), id='genero', alt='porcentaje_genero',
-                             className='imagen-genero')],
-                   id='genero-cont', className='genero'),
-          html.Div(dcc.Graph(figure=figure_sankey, id='sankey', className='sankey-graph', config=estilo_graficas),
-                   className='sankey'),
-          html.Div(dcc.Graph(figure=figure_bar, id='hora_recorrido', className='hora-recorrido-graph',
-                             config=estilo_graficas),
-                   className='hora-recorrido')],
-         className='contenedor-ecobici')
-     # html.Div(id='intermediate-value', style={'display': 'none'})
-     ])
+app.layout = html.Div([
+    dcc.Store(id='memory'),
+    html.Header([html.Div([html.H1('¿Ecobici o Auto? Que te conviene más')], id='titulo-app', className='titulo-app'),
+                 html.A([html.Img(src=app.get_asset_url('github.png'), alt='logo github',
+                                  className='logo-github')], href='https://github.com/paupradel/ecobici_viz')]),
+    html.Div(
+        [html.Div(dcc.Graph(figure=figure_mapa, id='mapa-graph', className='mapa-graph', clickData=click_data_inicial,
+                            config=estilo_graficas), id='mapa', className='mapa'),
+         html.Div([html.P('Edad'),
+                   html.H1(edad_seleccion, id='edad', className='edad')], id='edades',
+                  className='mini_container-grid-2'),
+         html.Div([html.P('Género', className='titulo-genero'),
+                   html.Img(src=app.get_asset_url(porcentaje_genero), id='genero', alt='porcentaje_genero',
+                            className='imagen-genero')],
+                  id='genero-cont', className='genero'),
+         html.Div(dcc.Graph(figure=figure_sankey, id='sankey', className='sankey-graph', config=estilo_graficas),
+                  className='sankey'),
+         html.Div(dcc.Graph(figure=figure_bar, id='hora_recorrido', className='hora-recorrido-graph',
+                            config=estilo_graficas),
+                  className='hora-recorrido')],
+        className='contenedor-ecobici')
+])
 
 
 @app.callback([Output('mapa-graph', 'figure'),
-               Output('sankey', 'figure')],
-              [Input('mapa-graph', 'clickData')])
-def select_ageb(clickData):
-    primer_ageb = 118
-    segundo_ageb = 822
-    num_clicks = []
-    num_clicks.append(clickData)
-    print(num_clicks)
-    if len(num_clicks) >= 1 and len(num_clicks) < 2:
-        primer_ageb_data = num_clicks[0]
-        primer_ageb = primer_ageb_data['points'][0]['location']
-    if len(num_clicks) >= 2:
-        segundo_ageb_data = num_clicks[-1]
-        segundo_ageb = segundo_ageb_data['points'][0]['location']
-        print(segundo_ageb)
+               Output('sankey', 'figure'),
+               Output('memory', 'data')],
+              [Input('mapa-graph', 'clickData')],
+              [State('memory', 'data')])
+def select_ageb(clickData, data):
+    if data is None:
+        data = {'ageb_inicial': ageb_inicial_default, 'ageb_final': ageb_final_default}
+    else:
+        data['ageb_inicial'] = data['ageb_final']
+        data['ageb_final'] = clickData['points'][0]['location']
 
-    figura_mapa_actualizado = dibujar_mapa(primer_ageb)
-    figure_sankey_actualizado = dibujar_sankey(primer_ageb, segundo_ageb)
+    figura_mapa_actualizado = dibujar_mapa(data['ageb_final'])
+    figure_sankey_actualizado = dibujar_sankey(data['ageb_inicial'], data['ageb_final'])
 
-    return figura_mapa_actualizado, figure_sankey_actualizado
+    return figura_mapa_actualizado, figure_sankey_actualizado, data
 
 
 if __name__ == '__main__':
