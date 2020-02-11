@@ -102,6 +102,8 @@ ipython_config.py
 #   install all needed dependencies.
 #Pipfile.lock
 env_calidad_aire/
+ecobicienv
+env_ecobici
 # celery beat schedule file
 celerybeat-schedule
 
