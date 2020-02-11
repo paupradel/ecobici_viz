@@ -160,10 +160,12 @@ def edad(primer_ageb, segundo_ageb, df_ve=df_ve):
     return edad_promedio_usuario
 
 
-def nombre_archivo_cascos():
+def nombre_archivo_cascos(primer_ageb, df_ve=df_ve):
     """
     Mostrar una imagen dependiendo del porcentaje de hombres y mujeres que hacen viajes en ecobici entre agebs
     """
+
+    df_ve = df_ve[df_ve['CVE_AGEB_retiro_'] == primer_ageb]
     query_genero = df_ve[["porcentage_hombres", "porcentage_mujeres"]].mean().round().astype(int)
     numero_hombres = query_genero[0]
 
@@ -190,10 +192,15 @@ def nombre_archivo_cascos():
     elif numero_hombres == 10:
         archivo = "0m-1h.png"
 
-    return str("cascos/" + archivo)
+    porcentaje_genero = app.get_asset_url("cascos/" + archivo)
+    print(porcentaje_genero)
+    return porcentaje_genero
 
+    # return str("cascos/" + archivo)
 
-porcentaje_genero = str(nombre_archivo_cascos())
+obtener_cascos = nombre_archivo_cascos(ageb_inicial_default)
+print(obtener_cascos)
+# porcentaje_genero = str(nombre_archivo_cascos(ageb_inicial_default))
 
 edad_seleccion = edad(ageb_inicial_default, ageb_final_default)
 
@@ -282,7 +289,7 @@ app.layout = html.Div([
                    html.H1(edad_seleccion, id='edad', className='edad')], id='edades',
                   className='mini_container-grid-2'),
          html.Div([html.P('Género', className='titulo-genero'),
-                   html.Img(src=app.get_asset_url(porcentaje_genero), id='genero', alt='porcentaje_genero',
+                   html.Img(src=obtener_cascos, id='genero', alt='porcentaje_genero',
                             className='imagen-genero')],
                   id='genero-cont', className='genero'),
          html.Div(dcc.Graph(figure=figure_sankey, id='sankey', className='sankey-graph', config=estilo_graficas),
@@ -296,6 +303,9 @@ app.layout = html.Div([
 
 @app.callback([Output('mapa-graph', 'figure'),
                Output('sankey', 'figure'),
+               Output('edad', 'children'),
+               Output('genero', 'src'),
+               Output('hora_recorrido', 'figure'),
                Output('memory', 'data')],
               [Input('mapa-graph', 'clickData')],
               [State('memory', 'data')])
@@ -308,8 +318,11 @@ def select_ageb(clickData, data):
 
     figura_mapa_actualizado = dibujar_mapa(data['ageb_final'])
     figure_sankey_actualizado = dibujar_sankey(data['ageb_inicial'], data['ageb_final'])
+    edad_actualizado = edad(data['ageb_inicial'], data['ageb_final'])
+    cascos_actualizado = nombre_archivo_cascos(data['ageb_inicial'])
+    figura_barras_actualizado = dibujar_barras(data['ageb_inicial'], data['ageb_final'])
 
-    return figura_mapa_actualizado, figure_sankey_actualizado, data
+    return figura_mapa_actualizado, figure_sankey_actualizado, edad_actualizado, cascos_actualizado, figura_barras_actualizado, data
 
 
 if __name__ == '__main__':
