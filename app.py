@@ -35,8 +35,8 @@ app.index_string = '''
 </html>'''
 
 # ---------------------------------CALLBACKS-------------------------------#
-ageb_inicial_default = 118
-ageb_final_default = 822
+ageb_inicial_default = 70
+ageb_final_default = 11
 
 # Leer shapefile y csv
 geodataframe = gpd.read_file('./data/production_data/ageb_geometry/ageb_geometria.shp')
@@ -193,14 +193,10 @@ def nombre_archivo_cascos(primer_ageb, df_ve=df_ve):
         archivo = "0m-1h.png"
 
     porcentaje_genero = app.get_asset_url("cascos/" + archivo)
-    print(porcentaje_genero)
     return porcentaje_genero
 
-    # return str("cascos/" + archivo)
 
 obtener_cascos = nombre_archivo_cascos(ageb_inicial_default)
-print(obtener_cascos)
-# porcentaje_genero = str(nombre_archivo_cascos(ageb_inicial_default))
 
 edad_seleccion = edad(ageb_inicial_default, ageb_final_default)
 
@@ -233,6 +229,7 @@ def dibujar_barras(primer_ageb, segundo_ageb, df_ve=df_ve):
 
     # Filtrar datos
     df_uber = df_uber[(df_uber['sourceid'] == primer_ageb) & (df_uber['dstid'] == segundo_ageb)]
+    df_ve = df_ve[(df_ve['CVE_AGEB_retiro_'] == primer_ageb) & (df_ve['CVE_AGEB_arribo_'] == segundo_ageb)]
 
     df_uber = df_uber.sort_values(by='periodo', ascending=True)
     df_ve = df_ve.sort_values(by='periodo', ascending=True)
@@ -267,6 +264,9 @@ def dibujar_barras(primer_ageb, segundo_ageb, df_ve=df_ve):
 
 
 figure_bar = dibujar_barras(ageb_inicial_default, ageb_final_default)
+
+
+# -----------------------------------------------------------------------------------------------------
 
 click_data_inicial = {
     'points': [{'curveNumber': 0, 'pointNumber': 103, 'pointIndex': 103, 'location': ageb_inicial_default, 'z': 3.67}]}
