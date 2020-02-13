@@ -155,9 +155,13 @@ figure_sankey = dibujar_sankey(ageb_inicial_default, ageb_final_default)
 # Leer archivo de viajes de ecobici
 def edad(primer_ageb, segundo_ageb, df_ve=df_ve):
     df_ve = df_ve[(df_ve['CVE_AGEB_retiro_'] == primer_ageb) & (df_ve['CVE_AGEB_arribo_'] == segundo_ageb)]
-    edad_promedio_usuario = int(round(df_ve['Edad_Usuario_mean'].mean()))
 
-    return edad_promedio_usuario
+    if len(df_ve.Edad_Usuario_mean.value_counts() > 0):
+        edad_promedio_usuario = int(round(df_ve['Edad_Usuario_mean'].mean()))
+        return edad_promedio_usuario
+    else:
+        edad_promedio_usuario = float('NaN')
+        return edad_promedio_usuario
 
 
 def nombre_archivo_cascos(primer_ageb, df_ve=df_ve):
@@ -199,7 +203,6 @@ def nombre_archivo_cascos(primer_ageb, df_ve=df_ve):
 obtener_cascos = nombre_archivo_cascos(ageb_inicial_default)
 
 edad_seleccion = edad(ageb_inicial_default, ageb_final_default)
-
 
 # ---------------------------------Grafica de barras-------------------------------#
 
