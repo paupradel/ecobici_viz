@@ -303,6 +303,35 @@ app.layout = html.Div([
         className='contenedor-ecobici')
 ])
 
+layout_modal = html.Div(children=[html.Div([html.Div(className='modal-text',
+                                                       children=[dcc.Markdown('''
+                                                     # This is the text that will be in the modal''')
+                                                                 ]
+                                                       ),
+                                              ],
+                                             id='modal',
+                                             className='modal',
+                                             style={'display': 'none'}
+                                             )
+                                    ]
+                          )
+
+def modal():
+    return layout_modal
+
+@app.callback(Output('modal', 'style'),
+              [Input('instructions-button', 'n-clicks')])
+def show_modal(n):
+    if n>0:
+        return {'display': 'block'}
+    return {'display': 'none'}
+
+
+@app.callback(Ouput('instructions-button', 'n-clicks'),
+              [Input('modal-close-button', 'n-clicks')])
+def close_modal(n):
+    return 0
+
 
 @app.callback([Output('mapa-graph', 'figure'),
                Output('sankey', 'figure'),
