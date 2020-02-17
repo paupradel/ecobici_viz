@@ -190,7 +190,7 @@ def nombre_archivo_cascos(primer_ageb, df_ve=df_ve):
     elif numero_hombres == 9:
         archivo = "1m-9h.png"
     elif numero_hombres == 10:
-        archivo = "0m-1h.png"
+        archivo = "0m-10h.png"
 
     porcentaje_genero = app.get_asset_url("cascos/" + archivo)
     return porcentaje_genero
