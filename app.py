@@ -280,58 +280,116 @@ estilo_graficas = {'responsive': True,
                    'autosizable': True,
                    'displaylogo': False}
 
-app.layout = html.Div([
-    dcc.Store(id='memory'),
-    html.Header([html.Div([html.H1('¿Ecobici o Auto? Que te conviene más')], id='titulo-app', className='titulo-app'),
-                 html.A([html.Img(src=app.get_asset_url('github.png'), alt='logo github',
-                                  className='logo-github')], href='https://github.com/paupradel/ecobici_viz')]),
-    html.Div(
-        [html.Div(dcc.Graph(figure=figure_mapa, id='mapa-graph', className='mapa-graph', clickData=click_data_inicial,
-                            config=estilo_graficas), id='mapa', className='mapa'),
-         html.Div([html.P('Edad'),
-                   html.H1(edad_seleccion, id='edad', className='edad')], id='edades',
-                  className='mini_container-grid-2'),
-         html.Div([html.P('Género', className='titulo-genero'),
-                   html.Img(src=obtener_cascos, id='genero', alt='porcentaje_genero',
-                            className='imagen-genero')],
-                  id='genero-cont', className='genero'),
-         html.Div(dcc.Graph(figure=figure_sankey, id='sankey', className='sankey-graph', config=estilo_graficas),
-                  className='sankey'),
-         html.Div(dcc.Graph(figure=figure_bar, id='hora_recorrido', className='hora-recorrido-graph',
-                            config=estilo_graficas),
-                  className='hora-recorrido')],
-        className='contenedor-ecobici')
-])
 
-layout_modal = html.Div(children=[html.Div([html.Div(className='modal-text',
-                                                       children=[dcc.Markdown('''
-                                                     # This is the text that will be in the modal''')
-                                                                 ]
-                                                       ),
-                                              ],
-                                             id='modal',
-                                             className='modal',
-                                             style={'display': 'none'}
-                                             )
-                                    ]
-                          )
+# app.layout_modal = html.Div(children=[html.Div([html.Div(className='modal-text',
+#                                                        children=[dcc.Markdown('''
+#                                                      # This is the text that will be in the modal''')
+#                                                                  ]
+#                                                        ),
+#                                               ],
+#                                              id='modal',
+#                                              className='modal',
+#                                              style={'display': 'none'}
+#                                              )
+#                                     ]
+#                           )
 
-def modal():
-    return layout_modal
+app.layout = html.Div([html.Div(html.Div([html.Div('contenido'),
+                                          html.Button('close', id='modal-close-button')]),
+                                id='modal',
+                                className='modal'),
+                       dcc.Store(id='memory'),
+                       html.Header([html.Div([html.H1('¿Ecobici o Auto? Que te conviene más')], id='titulo-app',
+                                             className='titulo-app'),
+                                    html.A([html.Img(src=app.get_asset_url('github.png'), alt='logo github',
+                                                     className='logo-github')],
+                                           href='https://github.com/paupradel/ecobici_viz')]),
+                       html.Div(
+                           [html.Div(dcc.Graph(figure=figure_mapa, id='mapa-graph', className='mapa-graph',
+                                               clickData=click_data_inicial,
+                                               config=estilo_graficas), id='mapa', className='mapa'),
+                            html.Div([html.P('Edad'),
+                                      html.H1(edad_seleccion, id='edad', className='edad')], id='edades',
+                                     className='mini_container-grid-2'),
+                            html.Div([html.P('Género', className='titulo-genero'),
+                                      html.Img(src=obtener_cascos, id='genero', alt='porcentaje_genero',
+                                               className='imagen-genero')],
+                                     id='genero-cont', className='genero'),
+                            html.Div(dcc.Graph(figure=figure_sankey, id='sankey', className='sankey-graph',
+                                               config=estilo_graficas),
+                                     className='sankey'),
+                            html.Div(dcc.Graph(figure=figure_bar, id='hora_recorrido', className='hora-recorrido-graph',
+                                               config=estilo_graficas),
+                                     className='hora-recorrido')],
+                           className='contenedor-ecobici')
+                       ])
+
+# app.layout = html.Div([
+#     dcc.Store(id='memory'),
+#     html.Header([html.Div([html.H1('¿Ecobici o Auto? Que te conviene más')], id='titulo-app', className='titulo-app'),
+#                  html.A([html.Img(src=app.get_asset_url('github.png'), alt='logo github',
+#                                   className='logo-github')], href='https://github.com/paupradel/ecobici_viz')]),
+#     html.Div(
+#         [html.Div(dcc.Graph(figure=figure_mapa, id='mapa-graph', className='mapa-graph', clickData=click_data_inicial,
+#                             config=estilo_graficas), id='mapa', className='mapa'),
+#          html.Div([html.P('Edad'),
+#                    html.H1(edad_seleccion, id='edad', className='edad')], id='edades',
+#                   className='mini_container-grid-2'),
+#          html.Div([html.P('Género', className='titulo-genero'),
+#                    html.Img(src=obtener_cascos, id='genero', alt='porcentaje_genero',
+#                             className='imagen-genero')],
+#                   id='genero-cont', className='genero'),
+#          html.Div(dcc.Graph(figure=figure_sankey, id='sankey', className='sankey-graph', config=estilo_graficas),
+#                   className='sankey'),
+#          html.Div(dcc.Graph(figure=figure_bar, id='hora_recorrido', className='hora-recorrido-graph',
+#                             config=estilo_graficas),
+#                   className='hora-recorrido')],
+#         className='contenedor-ecobici')
+# ])
+
+
+
+# app.layout = html.Div([
+#     dcc.Store(id='memory'),
+#     html.Header([html.Div([html.H1('¿Ecobici o Auto? Que te conviene más')], id='titulo-app', className='titulo-app'),
+#                  html.A([html.Img(src=app.get_asset_url('github.png'), alt='logo github',
+#                                   className='logo-github')], href='https://github.com/paupradel/ecobici_viz')]),
+#     html.Div(
+#         [html.Div(dcc.Graph(figure=figure_mapa, id='mapa-graph', className='mapa-graph', clickData=click_data_inicial,
+#                             config=estilo_graficas), id='mapa', className='mapa'),
+#          html.Div([html.P('Edad'),
+#                    html.H1(edad_seleccion, id='edad', className='edad')], id='edades',
+#                   className='mini_container-grid-2'),
+#          html.Div([html.P('Género', className='titulo-genero'),
+#                    html.Img(src=obtener_cascos, id='genero', alt='porcentaje_genero',
+#                             className='imagen-genero')],
+#                   id='genero-cont', className='genero'),
+#          html.Div(dcc.Graph(figure=figure_sankey, id='sankey', className='sankey-graph', config=estilo_graficas),
+#                   className='sankey'),
+#          html.Div(dcc.Graph(figure=figure_bar, id='hora_recorrido', className='hora-recorrido-graph',
+#                             config=estilo_graficas),
+#                   className='hora-recorrido')],
+#         className='contenedor-ecobici')
+# ])
+#
+# app.layout_modal = html.Div(children=[html.Div([html.Div(className='modal-text',
+#                                                        children=[dcc.Markdown('''
+#                                                      # This is the text that will be in the modal''')
+#                                                                  ]
+#                                                        ),
+#                                               ],
+#                                              id='modal',
+#                                              className='modal',
+#                                              style={'display': 'none'}
+#                                              )
+#                                     ]
+#                           )
 
 @app.callback(Output('modal', 'style'),
-              [Input('instructions-button', 'n-clicks')])
-def show_modal(n):
-    if n>0:
-        return {'display': 'block'}
-    return {'display': 'none'}
-
-
-@app.callback(Ouput('instructions-button', 'n-clicks'),
-              [Input('modal-close-button', 'n-clicks')])
+              [Input('modal-close-button', 'n_clicks')])
 def close_modal(n):
-    return 0
-
+    if (n is not None) and (n>0):
+        return {'display': 'none'}
 
 @app.callback([Output('mapa-graph', 'figure'),
                Output('sankey', 'figure'),
