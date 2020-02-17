@@ -294,8 +294,12 @@ estilo_graficas = {'responsive': True,
 #                                     ]
 #                           )
 
-app.layout = html.Div([html.Div(html.Div([html.Button('close', id='modal-close-button'),
-                                          html.Div([html.P('algo y otra cosa'),'contenido'], id='modal-content')]),
+
+app.layout = html.Div([html.Div(html.Div([html.Div([html.Div('contenido')]),
+                                         html.Hr(),
+                                         html.Button('Cerrar', id='modal-close-button', className='modal-close-button')],
+                                         id='modal-content',
+                                         className='modal-content'),
                                 id='modal',
                                 className='modal'),
                        dcc.Store(id='memory'),
