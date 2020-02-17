@@ -32,7 +32,7 @@
 }
 
  .contenedor-ecobici {
-    height: calc(100vh - 95px);
+    height: calc(100vh - 100px);
     display: grid;
     grid-template-columns: 50% 10% 40%;
     grid-template-rows: 20% 40% 40%;
@@ -41,9 +41,9 @@
 
 
  .mapa {
-     height: 100%;
+     height: calc(100vh - 50px);
      margin: 0;
-     margin-bottom: 10px;
+     margin-bottom: 0px;
      padding:0;
      position: absolute;
      grid-area: mapa;
@@ -154,16 +154,16 @@
      left: 0;
      top: 0;
      width: 100%;
-     height: calc(100vh - 95px);
+     height: 100vh;
      background-color: rgba(0, 0, 0, 0.6);
  }
 
- /*.modal-content {*/
- /*    border-radius: 50px;*/
- /*    !*left: calc(100vh - 44%);*!*/
- /*    !*top: calc(100vh - 95%);*!*/
- /*    margin: 40px;*/
- /*    height: 500px;*/
- /*    padding: 40px;*/
- /*    background-color: white;*/
- /*}*/
+ .modal-content {
+     border-radius: 50px;
+     /*left: calc(100vh - 44%);*/
+     /*top: calc(100vh - 95%);*/
+     margin: 40px;
+     height: 500px;
+     padding: 40px;
+     background-color: white;
+ }
