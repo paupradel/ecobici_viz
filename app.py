@@ -280,24 +280,40 @@ estilo_graficas = {'responsive': True,
                    'autosizable': True,
                    'displaylogo': False}
 
+contenido_pop_up_0 = '¡Bienvenido!'
 
-# app.layout_modal = html.Div(children=[html.Div([html.Div(className='modal-text',
-#                                                        children=[dcc.Markdown('''
-#                                                      # This is the text that will be in the modal''')
-#                                                                  ]
-#                                                        ),
-#                                               ],
-#                                              id='modal',
-#                                              className='modal',
-#                                              style={'display': 'none'}
-#                                              )
-#                                     ]
-#                           )
+contenido_pop_up_1 = 'En este sitio encontrarás los lugares de la Ciudad de México donde opera el programa Ecobici. ' \
+                   'Cada sección del mapa está divido en un AGEB (Área GeoEstadística Básica) y congrega las colonias ' \
+                   'donde se encuentran distintas cicloestaciones de ecobici.'
+
+contenido_pop_up_2 = 'Haz click en un AGEB para conocer la edad promedio y porcentaje de género de los usuarios. Puedes ' \
+                   'dar click en otra AGEB para encontrar el número de viajes que se realizaron entre las estaciones ' \
+                   'de las AGEBs seleccionadas. También podrás comparar el tiempo de viaje (en minutos) entre un auto y ' \
+                   'una bicicleta de las AGEBs elegidas (si es que hay datos).'
+
+contenido_pop_up_3 = 'Para encontrar el listado de estaciones que hay en cada AGEB puedes dar click' + ' '
+
+contenido_pop_up_4 = 'El mapa tiene dos AGEBs elegidas por default, la 70 como punto de partida, y la 11 como punto ' \
+                   'de llegada. Al seleccionar una tercer AGEB entonces tu punto de partida será la AGEB 11 y el de ' \
+                   'llegada la AGEB que hayas elegido. Así sucesivamente podrás conocer la información de todas las ' \
+                   'AGEB que hay en el programa.'
+
+contenido_pop_up_5 = 'Si tienes alguna sugerencia o problema con esta aplicación web, nos puedes escribir a ' \
+                     'pradel.paulina@gmail.com, o bien puedes levantar un "issue" en el repositorio de github' \
+                     'de este proyecto.'
+
+contenido_pop_up_6 = '¡Gracias!'
 
 
-app.layout = html.Div([html.Div(html.Div([html.Div([html.Div('contenido')]),
+app.layout = html.Div([html.Div(html.Div([html.Div([html.H1(contenido_pop_up_0),
+                                                    html.P(contenido_pop_up_1),
+                                                    html.P(contenido_pop_up_2),
+                                                    html.P([contenido_pop_up_3, html.A('aquí', href='https://www.sopitas.com/')]),
+                                                    html.P(contenido_pop_up_4),
+                                                    html.P(contenido_pop_up_5),
+                                                    html.H2(contenido_pop_up_6)]),
                                          html.Hr(),
-                                         html.Button('Cerrar', id='modal-close-button', className='modal-close-button')],
+                                         html.Button('Ir a la aplicación', id='modal-close-button', className='modal-close-button')],
                                          id='modal-content',
                                          className='modal-content'),
                                 id='modal',
@@ -328,66 +344,6 @@ app.layout = html.Div([html.Div(html.Div([html.Div([html.Div('contenido')]),
                            className='contenedor-ecobici')
                        ])
 
-# app.layout = html.Div([
-#     dcc.Store(id='memory'),
-#     html.Header([html.Div([html.H1('¿Ecobici o Auto? Que te conviene más')], id='titulo-app', className='titulo-app'),
-#                  html.A([html.Img(src=app.get_asset_url('github.png'), alt='logo github',
-#                                   className='logo-github')], href='https://github.com/paupradel/ecobici_viz')]),
-#     html.Div(
-#         [html.Div(dcc.Graph(figure=figure_mapa, id='mapa-graph', className='mapa-graph', clickData=click_data_inicial,
-#                             config=estilo_graficas), id='mapa', className='mapa'),
-#          html.Div([html.P('Edad'),
-#                    html.H1(edad_seleccion, id='edad', className='edad')], id='edades',
-#                   className='mini_container-grid-2'),
-#          html.Div([html.P('Género', className='titulo-genero'),
-#                    html.Img(src=obtener_cascos, id='genero', alt='porcentaje_genero',
-#                             className='imagen-genero')],
-#                   id='genero-cont', className='genero'),
-#          html.Div(dcc.Graph(figure=figure_sankey, id='sankey', className='sankey-graph', config=estilo_graficas),
-#                   className='sankey'),
-#          html.Div(dcc.Graph(figure=figure_bar, id='hora_recorrido', className='hora-recorrido-graph',
-#                             config=estilo_graficas),
-#                   className='hora-recorrido')],
-#         className='contenedor-ecobici')
-# ])
-
-
-
-# app.layout = html.Div([
-#     dcc.Store(id='memory'),
-#     html.Header([html.Div([html.H1('¿Ecobici o Auto? Que te conviene más')], id='titulo-app', className='titulo-app'),
-#                  html.A([html.Img(src=app.get_asset_url('github.png'), alt='logo github',
-#                                   className='logo-github')], href='https://github.com/paupradel/ecobici_viz')]),
-#     html.Div(
-#         [html.Div(dcc.Graph(figure=figure_mapa, id='mapa-graph', className='mapa-graph', clickData=click_data_inicial,
-#                             config=estilo_graficas), id='mapa', className='mapa'),
-#          html.Div([html.P('Edad'),
-#                    html.H1(edad_seleccion, id='edad', className='edad')], id='edades',
-#                   className='mini_container-grid-2'),
-#          html.Div([html.P('Género', className='titulo-genero'),
-#                    html.Img(src=obtener_cascos, id='genero', alt='porcentaje_genero',
-#                             className='imagen-genero')],
-#                   id='genero-cont', className='genero'),
-#          html.Div(dcc.Graph(figure=figure_sankey, id='sankey', className='sankey-graph', config=estilo_graficas),
-#                   className='sankey'),
-#          html.Div(dcc.Graph(figure=figure_bar, id='hora_recorrido', className='hora-recorrido-graph',
-#                             config=estilo_graficas),
-#                   className='hora-recorrido')],
-#         className='contenedor-ecobici')
-# ])
-#
-# app.layout_modal = html.Div(children=[html.Div([html.Div(className='modal-text',
-#                                                        children=[dcc.Markdown('''
-#                                                      # This is the text that will be in the modal''')
-#                                                                  ]
-#                                                        ),
-#                                               ],
-#                                              id='modal',
-#                                              className='modal',
-#                                              style={'display': 'none'}
-#                                              )
-#                                     ]
-#                           )
 
 @app.callback(Output('modal', 'style'),
               [Input('modal-close-button', 'n_clicks')])
