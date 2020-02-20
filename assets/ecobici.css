@@ -7,28 +7,41 @@ header {
     position: sticky;
     display: flex;
     height: 50px;
-    margin-top: 0px;
     margin-left: 10px;
     margin-right: 20px;
     background-color: white;
     align-items: center;
     justify-content: space-between;
     flex-direction: row;
+    z-index: 14;
 }
 
 header .container {
     display: inline-block;
     cursor: pointer;
-    padding-left: 5px;
+    padding-left: 50px;
     padding-bottom: 7px;
 }
 
 header .titulo-app {
-    position: sticky;
+    position: relative;
     height: 50px;
-    padding-bottom: 17px;
-    padding-left: 10px;
+    padding-bottom: 25px;
     float: left;
+}
+
+header .logo {
+    position: relative;
+    height: auto;
+    width: auto;
+    margin-top: 10px;
+    padding-right: 10px;
+    float: right;
+}
+
+.titulo-app {
+    position: relative;
+    margin-top: 5px;
 }
 
 P {
@@ -43,7 +56,7 @@ P {
     margin-top: 0px;
     padding-top: 0px;
     top: 0px;
-    z-index: 2000000000;
+    z-index: 10;
 }
 
 .button {
@@ -60,7 +73,7 @@ P {
     margin: 5px;
     opacity: 1.0;
     padding: 6px 4px 4px 4px;
-    z-index: 2000000000;
+    z-index: 10;
 }
 
 .button:hover,
@@ -84,12 +97,13 @@ P {
     font-size: 16px;
     border: none;
     cursor: pointer;
-    z-index: 2000000000;
+    z-index: 10;
 }
 
 .dropdown {
     position: relative;
     display: inline-block;
+    z-index: 10;
 }
 
 .dropdown-content {
@@ -98,6 +112,7 @@ P {
     background-color: #f9f9f9;
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 10;
 }
 
 .dropdown-content a {
@@ -105,14 +120,16 @@ P {
     padding: 12px 16px;
     text-decoration: none;
     display: block;
-    z-index: 2000000000;
+    z-index: 10;
 }
 
-.dropdown-content a:hover {background-color: #f1f1f1}
+.dropdown-content a:hover {background-color: #f1f1f1; z-index: 10;}
 
 .dropdown:hover .dropdown-content {display: block;}
 
 .dropdown:hover .dropbtn {background-color: #ccffff;}
+
+
 
 .contenedor-ecobici {
     height: calc(100vh - 100px);
@@ -130,6 +147,7 @@ P {
     padding: 0;
     position: absolute;
     grid-area: mapa;
+    z-index: 1;
 }
 
 .mapa-graph {
@@ -137,12 +155,14 @@ P {
     margin-bottom: 10px;
     padding: 0;
     position: absolute;
+    z-index: 1;
 }
 
 .mapa mapa-graph {
     display: block;
     width: 100%;
     border: 0;
+    z-index: 1;
 }
 
 .titulo-genero {
@@ -233,7 +253,7 @@ P {
 
 .modal {
     position: fixed;
-    z-index: 1002;
+    z-index: 15;
     left: 0;
     top: 0;
     width: 100%;
