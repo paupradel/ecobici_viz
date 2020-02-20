@@ -62,7 +62,7 @@ P {
 .button {
     display: flex;
     font-size: 16px;
-    font-family: "Avenir LT Std 55 Roman";
+    font-family: 'Raleway', sans-serif;
     text-align: center;
     border: 1px solid #f9f9f9;
     align-items: center;
