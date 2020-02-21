@@ -1,6 +1,7 @@
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
+import dash_bootstrap_components as dbc
 import geopandas as gpd
 import pandas as pd
 import plotly.graph_objs as go
@@ -204,6 +205,7 @@ obtener_cascos = nombre_archivo_cascos(ageb_inicial_default)
 
 edad_seleccion = edad(ageb_inicial_default, ageb_final_default)
 
+
 # ---------------------------------Grafica de barras-------------------------------#
 
 # Asignar bote
@@ -268,35 +270,30 @@ def dibujar_barras(primer_ageb, segundo_ageb, df_ve=df_ve):
 
 figure_bar = dibujar_barras(ageb_inicial_default, ageb_final_default)
 
-
-# -----------------------------------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------------------------------------------#
 
 click_data_inicial = {
     'points': [{'curveNumber': 0, 'pointNumber': 103, 'pointIndex': 103, 'location': ageb_inicial_default, 'z': 3.67}]}
 
-# --------------------------------- Layout de la app-------------------------------#
-
-estilo_graficas = {'responsive': True,
-                   'autosizable': True,
-                   'displaylogo': False}
+# ------------------------------------------------- MODAL WINDOWS -----------------------------------------------------#
 
 contenido_pop_up_0 = '¡Bienvenido!'
 
 contenido_pop_up_1 = 'En este sitio encontrarás los lugares de la Ciudad de México donde opera el programa Ecobici. ' \
-                   'Cada sección del mapa está divido en un AGEB (Área GeoEstadística Básica) y congrega las colonias ' \
-                   'donde se encuentran distintas cicloestaciones de ecobici.'
+                     'Cada sección del mapa está divido en un AGEB (Área GeoEstadística Básica) y congrega las colonias ' \
+                     'donde se encuentran distintas cicloestaciones de ecobici.'
 
 contenido_pop_up_2 = 'Haz click en un AGEB para conocer la edad promedio y porcentaje de género de los usuarios. Puedes ' \
-                   'dar click en otra AGEB para encontrar el número de viajes que se realizaron entre las estaciones ' \
-                   'de las AGEBs seleccionadas. También podrás comparar el tiempo de viaje (en minutos) entre un auto y ' \
-                   'una bicicleta de las AGEBs elegidas (si es que hay datos).'
+                     'dar click en otra AGEB para encontrar el número de viajes que se realizaron entre las estaciones ' \
+                     'de las AGEBs seleccionadas. También podrás comparar el tiempo de viaje (en minutos) entre un auto y ' \
+                     'una bicicleta de las AGEBs elegidas (si es que hay datos).'
 
 contenido_pop_up_3 = 'Para encontrar el listado de estaciones que hay en cada AGEB puedes dar click' + ' '
 
 contenido_pop_up_4 = 'El mapa tiene dos AGEBs elegidas por default, la 70 como punto de partida, y la 11 como punto ' \
-                   'de llegada. Al seleccionar una tercer AGEB entonces tu punto de partida será la AGEB 11 y el de ' \
-                   'llegada la AGEB que hayas elegido. Así sucesivamente podrás conocer la información de todas las ' \
-                   'AGEB que hay en el programa.'
+                     'de llegada. Al seleccionar una tercer AGEB entonces tu punto de partida será la AGEB 11 y el de ' \
+                     'llegada la AGEB que hayas elegido. Así sucesivamente podrás conocer la información de todas las ' \
+                     'AGEB que hay en el programa.'
 
 contenido_pop_up_5 = 'Si tienes alguna sugerencia o problema con esta aplicación web, nos puedes escribir a ' \
                      'pradel.paulina@gmail.com, o bien puedes levantar un "issue" en el repositorio de github' \
@@ -304,31 +301,85 @@ contenido_pop_up_5 = 'Si tienes alguna sugerencia o problema con esta aplicació
 
 contenido_pop_up_6 = '¡Gracias!'
 
+# ---------------------------------------------------LAYOUT APP--------------------------------------------------------#
+estilo_graficas = {'responsive': True,
+                   'autosizable': True,
+                   'displaylogo': False}
+
+# app.layout = html.Div([html.Div(html.Div([html.Div([html.H1(contenido_pop_up_0),
+#                                                     html.P(contenido_pop_up_1),
+#                                                     html.P(contenido_pop_up_2),
+#                                                     html.P([contenido_pop_up_3,
+#                                                             html.A('aquí', href='https://www.sopitas.com/')]),
+#                                                     html.P(contenido_pop_up_4),
+#                                                     html.P(contenido_pop_up_5),
+#                                                     html.H2(contenido_pop_up_6)]),
+#                                           html.Hr(),
+#                                           html.Button('Ir a la aplicación', id='modal-close-button',
+#                                                       className='modal-close-button')],
+#                                          id='modal-content',
+#                                          className='modal-content'),
+#                                 id='modal',
+#                                 className='modal'),
+#                        dcc.Store(id='memory'),
+#                        html.Header([html.Div([html.Button([html.Div(className='bar1'),
+#                                                            html.Div(className='bar2'),
+#                                                            html.Div(className='bar3')],
+#                                                           id='myBtn', className='dropbtn'),
+#                                               html.Div(
+#                                                   [html.Button(html.Span('Instrucciones'), id='instrucciones_button',
+#                                                                n_clicks_timestamp=0, className='button'),
+#                                                    html.Button(html.Span('Cicloestaciones'),
+#                                                                id='cicloestaciones_button', n_clicks_timestamp=0,
+#                                                                className='button')], id='myDropdown',
+#                                                   className='dropdown-content')], className='dropdown'),
+#                                     html.Div([html.H1('¿Ecobici o Auto? Que te conviene más')], id='titulo-app',
+#                                              className='titulo-app'),
+#                                     html.A([html.Img(src=app.get_asset_url('github.png'), alt='logo github',
+#                                                      className='logo')],
+#                                            href='https://github.com/paupradel/ecobici_viz')]),
+#                        html.Div(
+#                            [html.Div(dcc.Graph(figure=figure_mapa, id='mapa-graph', className='mapa-graph',
+#                                                clickData=click_data_inicial,
+#                                                config=estilo_graficas), id='mapa', className='mapa'),
+#                             html.Div([html.P('Edad'),
+#                                       html.H1(edad_seleccion, id='edad', className='edad')], id='edades',
+#                                      className='mini_container-grid-2'),
+#                             html.Div([html.P('Género', className='titulo-genero'),
+#                                       html.Img(src=obtener_cascos, id='genero', alt='porcentaje_genero',
+#                                                className='imagen-genero')],
+#                                      id='genero-cont', className='genero'),
+#                             html.Div(dcc.Graph(figure=figure_sankey, id='sankey', className='sankey-graph',
+#                                                config=estilo_graficas),
+#                                      className='sankey'),
+#                             html.Div(dcc.Graph(figure=figure_bar, id='hora_recorrido', className='hora-recorrido-graph',
+#                                                config=estilo_graficas),
+#                                      className='hora-recorrido')],
+#                            className='contenedor-ecobici')
+#                        ])
+
 
 app.layout = html.Div([html.Div(html.Div([html.Div([html.H1(contenido_pop_up_0),
                                                     html.P(contenido_pop_up_1),
                                                     html.P(contenido_pop_up_2),
-                                                    html.P([contenido_pop_up_3, html.A('aquí', href='https://www.sopitas.com/')]),
+                                                    html.P([contenido_pop_up_3,
+                                                            html.A('aquí', href='https://www.sopitas.com/')]),
                                                     html.P(contenido_pop_up_4),
                                                     html.P(contenido_pop_up_5),
                                                     html.H2(contenido_pop_up_6)]),
-                                         html.Hr(),
-                                         html.Button('Ir a la aplicación', id='modal-close-button', className='modal-close-button')],
+                                          html.Hr(),
+                                          html.Button('Ir a la aplicación', id='modal-close-button',
+                                                      className='modal-close-button')],
                                          id='modal-content',
                                          className='modal-content'),
-                                id='modal',
+                                id='modal_1',
                                 className='modal'),
                        dcc.Store(id='memory'),
-                       html.Header([html.Div([html.Button([html.Div(className='bar1'),
-                                                           html.Div(className='bar2'),
-                                                           html.Div(className='bar3')],
-                                                          id='myBtn', className='dropbtn'),
-                                              html.Div([html.Button(html.Span('Instrucciones'), id='instrucciones_button',
-                                                                    n_clicks_timestamp=0, className='button'),
-                                                        html.Button(html.Span('Cicloestaciones'),
-                                                                    id='cicloestaciones_button', n_clicks_timestamp=0,
-                                                                    className='button')], id='myDropdown',
-                                                       className='dropdown-content')], className='dropdown'),
+                       html.Header([html.Div([dbc.Button('Instrucciones', id='instrucciones_button'),
+                                              dbc.Modal([dbc.ModalBody('bla bla bla'),
+                                                         dbc.ModalFooter(dbc.Button('Ir a la aplicación', id='close_2',
+                                                                                    className='close_2'))],
+                                                        id='modal_2')]),
                                     html.Div([html.H1('¿Ecobici o Auto? Que te conviene más')], id='titulo-app',
                                              className='titulo-app'),
                                     html.A([html.Img(src=app.get_asset_url('github.png'), alt='logo github',
@@ -355,11 +406,22 @@ app.layout = html.Div([html.Div(html.Div([html.Div([html.H1(contenido_pop_up_0),
                        ])
 
 
-@app.callback(Output('modal', 'style'),
+@app.callback(Output('modal_1', 'style'),
               [Input('modal-close-button', 'n_clicks')])
 def close_modal(n):
-    if (n is not None) and (n>0):
+    if (n is not None) and (n > 0):
         return {'display': 'none'}
+
+
+@app.callback(Output('modal_2', 'is_open'),
+              [Input('instrucciones_button', 'n_clicks'),
+               Input('close_2', 'n_clicks')],
+              [State('modal_2', 'is_open')])
+def toggle_modal(n1, n2, is_open):
+    if n1 or n2:
+        return not is_open
+    return is_open
+
 
 @app.callback([Output('mapa-graph', 'figure'),
                Output('sankey', 'figure'),
