@@ -301,6 +301,15 @@ contenido_pop_up_5 = 'Si tienes alguna sugerencia o problema con esta aplicació
 
 contenido_pop_up_6 = '¡Gracias!'
 
+modal_content = [html.H1(contenido_pop_up_0),
+                 html.P(contenido_pop_up_1),
+                 html.P(contenido_pop_up_2),
+                 html.P([contenido_pop_up_3,
+                         html.A('aquí', href='https://www.sopitas.com/')]),
+                 html.P(contenido_pop_up_4),
+                 html.P(contenido_pop_up_5),
+                 html.H2(contenido_pop_up_6)]
+
 # ---------------------------------------------------LAYOUT APP--------------------------------------------------------#
 estilo_graficas = {'responsive': True,
                    'autosizable': True,
@@ -359,14 +368,7 @@ estilo_graficas = {'responsive': True,
 #                        ])
 
 
-app.layout = html.Div([html.Div(html.Div([html.Div([html.H1(contenido_pop_up_0),
-                                                    html.P(contenido_pop_up_1),
-                                                    html.P(contenido_pop_up_2),
-                                                    html.P([contenido_pop_up_3,
-                                                            html.A('aquí', href='https://www.sopitas.com/')]),
-                                                    html.P(contenido_pop_up_4),
-                                                    html.P(contenido_pop_up_5),
-                                                    html.H2(contenido_pop_up_6)]),
+app.layout = html.Div([html.Div(html.Div([html.Div(modal_content),
                                           html.Hr(),
                                           html.Button('Ir a la aplicación', id='modal-close-button',
                                                       className='modal-close-button')],
@@ -376,7 +378,8 @@ app.layout = html.Div([html.Div(html.Div([html.Div([html.H1(contenido_pop_up_0),
                                 className='modal'),
                        dcc.Store(id='memory'),
                        html.Header([html.Div([dbc.Button('Instrucciones', id='instrucciones_button'),
-                                              dbc.Modal([dbc.ModalBody('bla bla bla'),
+                                              dbc.Modal([dbc.ModalBody(modal_content),
+                                                         html.Hr(),
                                                          dbc.ModalFooter(dbc.Button('Ir a la aplicación', id='close_2',
                                                                                     className='close_2'))],
                                                         id='modal_2')]),
