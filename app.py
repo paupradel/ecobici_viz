@@ -21,6 +21,7 @@ app.index_string = '''
 <html>
     <head>
         <link href="https://fonts.googleapis.com/css?family=Raleway:300,400,500,600&display=swap" rel="stylesheet">
+        <link href="/assets/css/all.css" rel="stylesheet">
         <meta charset= "UTF-8">
         <title>Ecobici</title>
         {%favicon%}
@@ -377,17 +378,20 @@ app.layout = html.Div([html.Div(html.Div([html.Div(modal_content),
                                 id='modal_1',
                                 className='modal'),
                        dcc.Store(id='memory'),
-                       html.Header([html.Div([dbc.Button('Instrucciones', id='instrucciones_button'),
-                                              dbc.Modal([dbc.ModalBody(modal_content),
-                                                         html.Hr(),
-                                                         dbc.ModalFooter(dbc.Button('Ir a la aplicación', id='close_2',
-                                                                                    className='modal-close-button'))],
-                                                        id='modal_2')]),
-                                    html.Div([html.H1('¿Ecobici o Auto? Que te conviene más')], id='titulo-app',
+                       html.Header([html.Div([html.H1('¿Ecobici o Auto? Que te conviene más')], id='titulo-app',
                                              className='titulo-app'),
-                                    html.A([html.Img(src=app.get_asset_url('github.png'), alt='logo github',
-                                                     className='logo')],
-                                           href='https://github.com/paupradel/ecobici_viz')]),
+                                    html.Div([html.Div(
+                                        [html.I(id='instrucciones_button', n_clicks=0, className='fas fa-info-circle fa-2x'),
+                                         dbc.Modal([dbc.ModalBody(modal_content),
+                                                    html.Hr(),
+                                                    dbc.ModalFooter(dbc.Button('Ir a la aplicación', id='close_2',
+                                                                               className='modal-close-button'))],
+                                                   id='modal_2')]),
+
+                                        html.A([html.Img(src=app.get_asset_url('github.png'), alt='logo github',
+                                                         className='logo')],
+                                               href='https://github.com/paupradel/ecobici_viz')], className='iconos')
+                                    ]),
                        html.Div(
                            [html.Div(dcc.Graph(figure=figure_mapa, id='mapa-graph', className='mapa-graph',
                                                clickData=click_data_inicial,
