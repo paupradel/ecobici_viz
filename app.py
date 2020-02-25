@@ -297,7 +297,7 @@ contenido_pop_up_4 = 'El mapa tiene dos AGEBs elegidas por default, la 70 como p
                      'AGEB que hay en el programa.'
 
 contenido_pop_up_5 = 'Si tienes alguna sugerencia o problema con esta aplicación web, nos puedes escribir a ' \
-                     'pradel.paulina@gmail.com, o bien puedes levantar un "issue" en el repositorio de github' \
+                     'pradel.paulina@gmail.com, o bien puedes levantar un "issue" en el repositorio de github ' \
                      'de este proyecto.'
 
 contenido_pop_up_6 = '¡Gracias!'
