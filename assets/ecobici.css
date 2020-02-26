@@ -1,38 +1,68 @@
- body {
-     margin: 0;
-     font-family: 'Raleway', sans-serif;
- }
+body {
+    margin: 0;
+    font-family: 'Raleway', sans-serif;
+}
 
- header {
+header {
     position: sticky;
     display: flex;
     height: 50px;
-    margin-top: 0px;
     margin-left: 10px;
     margin-right: 20px;
     background-color: white;
     align-items: center;
     justify-content: space-between;
     flex-direction: row;
+    z-index: 14;
 }
 
- header .container {
+header .container {
     display: inline-block;
     cursor: pointer;
-    padding-left: 5px;
+    padding-left: 50px;
     padding-bottom: 7px;
 }
 
- header .titulo-app {
-    position: sticky;
+header .titulo-app {
+    position: relative;
     height: 50px;
-    padding-bottom: 17px;
-    padding-left: 10px;
+    padding-bottom: 25px;
     float: left;
 }
 
- .contenedor-ecobici {
-    height: calc(100vh - 95px);
+header .iconos {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    float: right;
+    padding-right: 10px;
+    height: auto;
+    width: auto;
+}
+
+header .logo {
+    position: relative;
+    height: auto;
+    width: auto;
+    padding-left: 20px;
+    float: right;
+}
+
+header .titulo-app {
+    position: relative;
+    margin-top: 5px;
+}
+
+.fa-info-circle {
+    cursor: pointer;
+}
+
+P {
+    font-size: 20px;
+}
+
+.contenedor-ecobici {
+    height: calc(100vh - 100px);
     display: grid;
     grid-template-columns: 50% 10% 40%;
     grid-template-rows: 20% 40% 40%;
@@ -40,110 +70,139 @@
 }
 
 
- .mapa {
-     height: 100%;
-     margin: 0;
-     margin-bottom: 10px;
-     padding:0;
-     position: absolute;
-     grid-area: mapa;
- }
+.mapa {
+    height: calc(100vh - 50px);
+    margin: 0;
+    margin-bottom: 0px;
+    padding: 0;
+    position: absolute;
+    grid-area: mapa;
+    z-index: 1;
+}
 
- .mapa-graph {
-     height: 95%;
-     margin-bottom: 10px;
-     padding:0;
-     position: absolute;
- }
+.mapa-graph {
+    height: 95%;
+    margin-bottom: 10px;
+    padding: 0;
+    position: absolute;
+    z-index: 1;
+}
 
- .mapa mapa-graph {
-     display: block;
-     width: 100%;
-     border: 0;
- }
+.mapa mapa-graph {
+    display: block;
+    width: 100%;
+    border: 0;
+    z-index: 1;
+}
 
- .titulo-genero {
-     grid-area: titulogenero
- }
+.titulo-genero {
+    grid-area: titulogenero
+}
 
- .imagen-genero {
-     padding-left: 20px;
-     padding-right: 20px;
-     position: relative;
-     width: auto;
-     height: 100%;
-     grid-area: imagengenero;
+.imagen-genero {
+    padding-left: 20px;
+    padding-right: 20px;
+    position: relative;
+    width: auto;
+    height: 100%;
+    grid-area: imagengenero;
 
- }
+}
 
- .genero {
-     z-index: -1;
-     display: grid;
-     border-radius: 5px;
-     background-color: #f9f9f9;
-     margin-top: 0px;
-     margin-left: 5px;
-     margin-right: 20px;
-     padding: 5px;
-     position: relative;
-     box-shadow: 2px 2px 2px lightgrey;
-     grid-area: genero;
-     grid-template-columns: 20% 80%;
-     grid-template-rows: 100%;
-     grid-template-areas: 'titulogenero imagengenero'
- }
+.genero {
+    z-index: -1;
+    display: grid;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    margin-top: 0px;
+    margin-left: 5px;
+    margin-right: 20px;
+    padding: 5px;
+    position: relative;
+    box-shadow: 2px 2px 2px lightgrey;
+    grid-area: genero;
+    grid-template-columns: 20% 80%;
+    grid-template-rows: 100%;
+    grid-template-areas: 'titulogenero imagengenero'
+}
 
- .mini_container-grid-2 {
-  border-radius: 5px;
-  background-color: #f9f9f9;
-  margin-top: 0px;
-  margin-left: 20px;
-  margin-right: 10px;
-  padding: 5px;
-  position: relative;
-  box-shadow: 2px 2px 2px lightgrey;
-  grid-area: edades
+.mini_container-grid-2 {
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    margin-top: 0px;
+    margin-left: 20px;
+    margin-right: 10px;
+    padding: 5px;
+    position: relative;
+    box-shadow: 2px 2px 2px lightgrey;
+    grid-area: edades
 }
 
 .edad {
     align-items: center;
 }
 
- .sankey {
-     border-radius: 5px;
-     background-color: #f9f9f9;
-     margin-top: 25px;
-     margin-left: 20px;
-     margin-right: 20px;
-     margin-bottom: 30px;
-     position: relative;
-     box-shadow: 2px 2px 2px lightgrey;
-     grid-area: sankey;
- }
+.sankey {
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    margin-top: 25px;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 30px;
+    position: relative;
+    box-shadow: 2px 2px 2px lightgrey;
+    grid-area: sankey;
+}
 
- .sankey-graph {
-     margin-right: 5px;
-     position: relative;
-     width: auto;
-     height: 100%;
- }
+.sankey-graph {
+    margin-right: 5px;
+    position: relative;
+    width: auto;
+    height: 100%;
+}
 
- .hora-recorrido {
-     border-radius: 5px;
-     background-color: #f9f9f9;
-     margin-top: 25px;
-     margin-left: 20px;
-     margin-right: 20px;
-     margin-bottom: 0px;
-     position: relative;
-     box-shadow: 2px 2px 2px lightgrey;
-     grid-area: horarecorrido;
- }
+.hora-recorrido {
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    margin-top: 25px;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 0px;
+    position: relative;
+    box-shadow: 2px 2px 2px lightgrey;
+    grid-area: horarecorrido;
+}
 
- .hora-recorrido-graph {
-     margin-right: 5px;
-     position: relative;
-     width: auto;
-     height: 100%;
+.hora-recorrido-graph {
+    margin-right: 5px;
+    position: relative;
+    width: auto;
+    height: 100%;
 
- }
+}
+
+.modal {
+    position: fixed;
+    z-index: 15;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    border-radius: 50px;
+    margin: 90px;
+    padding: 30px;
+    background-color: white;
+}
+
+.modal-close-button {
+    font-family: 'Raleway', sans-serif;
+    font-size: 16px;
+    background-color: mediumpurple;
+    color: white;
+    cursor: pointer;
+    align-items: center;
+}
