@@ -379,17 +379,7 @@ app.layout = html.Div([html.Div(html.Div([html.Div(modal_content),
                                 id='modal_1',
                                 className='modal'),
                        dcc.Store(id='memory'),
-<<<<<<< HEAD
-                       html.Header([html.Div([dbc.Button('Instrucciones', id='instrucciones_button'),
-                                              dbc.Modal([dbc.ModalBody(modal_content),
-                                                         html.Hr(),
-                                                         dbc.ModalFooter(dbc.Button('Ir a la aplicación', id='close_2',
-                                                                                    className='modal-close-button'))],
-                                                        id='modal_2')]),
-                                    html.Div([html.H1('¿Ecobici o Auto? Que te conviene más')], id='titulo-app',
-=======
                        html.Header([html.Div([html.H1('¿Ecobici o Auto? Que te conviene más')], id='titulo-app',
->>>>>>> depoku
                                              className='titulo-app'),
                                     html.Div([html.Div(
                                         [html.I(id='instrucciones_button', n_clicks=0,
