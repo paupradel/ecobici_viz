@@ -21,6 +21,7 @@ app.index_string = '''
 <html>
     <head>
         <link href="https://fonts.googleapis.com/css?family=Raleway:300,400,500,600&display=swap" rel="stylesheet">
+        <link href="/assets/css/all.css" rel="stylesheet">
         <meta charset= "UTF-8">
         <title>Ecobici</title>
         {%favicon%}
@@ -296,7 +297,7 @@ contenido_pop_up_4 = 'El mapa tiene dos AGEBs elegidas por default, la 70 como p
                      'AGEB que hay en el programa.'
 
 contenido_pop_up_5 = 'Si tienes alguna sugerencia o problema con esta aplicación web, nos puedes escribir a ' \
-                     'pradel.paulina@gmail.com, o bien puedes levantar un "issue" en el repositorio de github' \
+                     'pradel.paulina@gmail.com, o bien puedes levantar un "issue" en el repositorio de github ' \
                      'de este proyecto.'
 
 contenido_pop_up_6 = '¡Gracias!'
@@ -305,7 +306,8 @@ modal_content = [html.H1(contenido_pop_up_0),
                  html.P(contenido_pop_up_1),
                  html.P(contenido_pop_up_2),
                  html.P([contenido_pop_up_3,
-                         html.A('aquí', href='https://www.sopitas.com/')]),
+                         html.A('aquí',
+                                href='https://docs.google.com/spreadsheets/d/1s16phPf9PjVXzgqwWSm2sfDq5vrvaq6LGNfSCs_O8hs/edit?usp=sharing')]),
                  html.P(contenido_pop_up_4),
                  html.P(contenido_pop_up_5),
                  html.H2(contenido_pop_up_6)]
@@ -377,6 +379,7 @@ app.layout = html.Div([html.Div(html.Div([html.Div(modal_content),
                                 id='modal_1',
                                 className='modal'),
                        dcc.Store(id='memory'),
+<<<<<<< HEAD
                        html.Header([html.Div([dbc.Button('Instrucciones', id='instrucciones_button'),
                                               dbc.Modal([dbc.ModalBody(modal_content),
                                                          html.Hr(),
@@ -384,10 +387,23 @@ app.layout = html.Div([html.Div(html.Div([html.Div(modal_content),
                                                                                     className='modal-close-button'))],
                                                         id='modal_2')]),
                                     html.Div([html.H1('¿Ecobici o Auto? Que te conviene más')], id='titulo-app',
+=======
+                       html.Header([html.Div([html.H1('¿Ecobici o Auto? Que te conviene más')], id='titulo-app',
+>>>>>>> depoku
                                              className='titulo-app'),
-                                    html.A([html.Img(src=app.get_asset_url('github.png'), alt='logo github',
-                                                     className='logo')],
-                                           href='https://github.com/paupradel/ecobici_viz')]),
+                                    html.Div([html.Div(
+                                        [html.I(id='instrucciones_button', n_clicks=0,
+                                                className='fas fa-info-circle fa-2x'),
+                                         dbc.Modal([dbc.ModalBody(modal_content),
+                                                    html.Hr(),
+                                                    dbc.ModalFooter(dbc.Button('Ir a la aplicación', id='close_2',
+                                                                               className='modal-close-button'))],
+                                                   id='modal_2')]),
+
+                                        html.A([html.Img(src=app.get_asset_url('github.png'), alt='logo github',
+                                                         className='logo')],
+                                               href='https://github.com/paupradel/ecobici_viz')], className='iconos')
+                                    ]),
                        html.Div(
                            [html.Div(dcc.Graph(figure=figure_mapa, id='mapa-graph', className='mapa-graph',
                                                clickData=click_data_inicial,
