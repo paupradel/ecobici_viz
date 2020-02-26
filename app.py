@@ -37,8 +37,8 @@ app.index_string = '''
 </html>'''
 
 # ---------------------------------CALLBACKS-------------------------------#
-ageb_inicial_default = 70
-ageb_final_default = 11
+ageb_inicial_default = 1197
+ageb_final_default = 930
 
 # Leer shapefile y csv
 geodataframe = gpd.read_file('./data/production_data/ageb_geometry/ageb_geometria.shp')
@@ -166,12 +166,12 @@ def edad(primer_ageb, segundo_ageb, df_ve=df_ve):
         return edad_promedio_usuario
 
 
-def nombre_archivo_cascos(primer_ageb, df_ve=df_ve):
+def nombre_archivo_cascos(primer_ageb, segundo_ageb, df_ve=df_ve):
     """
     Mostrar una imagen dependiendo del porcentaje de hombres y mujeres que hacen viajes en ecobici entre agebs
     """
 
-    df_ve = df_ve[df_ve['CVE_AGEB_retiro_'] == primer_ageb]
+    df_ve = df_ve[(df_ve['CVE_AGEB_retiro_'] == primer_ageb)&(df_ve['CVE_AGEB_arribo_'] == segundo_ageb)]
     query_genero = df_ve[["porcentage_hombres", "porcentage_mujeres"]].mean().round().astype(int)
     numero_hombres = query_genero[0]
 
@@ -202,7 +202,7 @@ def nombre_archivo_cascos(primer_ageb, df_ve=df_ve):
     return porcentaje_genero
 
 
-obtener_cascos = nombre_archivo_cascos(ageb_inicial_default)
+obtener_cascos = nombre_archivo_cascos(ageb_inicial_default, ageb_final_default)
 
 edad_seleccion = edad(ageb_inicial_default, ageb_final_default)
 
@@ -317,58 +317,6 @@ estilo_graficas = {'responsive': True,
                    'autosizable': True,
                    'displaylogo': False}
 
-# app.layout = html.Div([html.Div(html.Div([html.Div([html.H1(contenido_pop_up_0),
-#                                                     html.P(contenido_pop_up_1),
-#                                                     html.P(contenido_pop_up_2),
-#                                                     html.P([contenido_pop_up_3,
-#                                                             html.A('aquí', href='https://www.sopitas.com/')]),
-#                                                     html.P(contenido_pop_up_4),
-#                                                     html.P(contenido_pop_up_5),
-#                                                     html.H2(contenido_pop_up_6)]),
-#                                           html.Hr(),
-#                                           html.Button('Ir a la aplicación', id='modal-close-button',
-#                                                       className='modal-close-button')],
-#                                          id='modal-content',
-#                                          className='modal-content'),
-#                                 id='modal',
-#                                 className='modal'),
-#                        dcc.Store(id='memory'),
-#                        html.Header([html.Div([html.Button([html.Div(className='bar1'),
-#                                                            html.Div(className='bar2'),
-#                                                            html.Div(className='bar3')],
-#                                                           id='myBtn', className='dropbtn'),
-#                                               html.Div(
-#                                                   [html.Button(html.Span('Instrucciones'), id='instrucciones_button',
-#                                                                n_clicks_timestamp=0, className='button'),
-#                                                    html.Button(html.Span('Cicloestaciones'),
-#                                                                id='cicloestaciones_button', n_clicks_timestamp=0,
-#                                                                className='button')], id='myDropdown',
-#                                                   className='dropdown-content')], className='dropdown'),
-#                                     html.Div([html.H1('¿Ecobici o Auto? Que te conviene más')], id='titulo-app',
-#                                              className='titulo-app'),
-#                                     html.A([html.Img(src=app.get_asset_url('github.png'), alt='logo github',
-#                                                      className='logo')],
-#                                            href='https://github.com/paupradel/ecobici_viz')]),
-#                        html.Div(
-#                            [html.Div(dcc.Graph(figure=figure_mapa, id='mapa-graph', className='mapa-graph',
-#                                                clickData=click_data_inicial,
-#                                                config=estilo_graficas), id='mapa', className='mapa'),
-#                             html.Div([html.P('Edad'),
-#                                       html.H1(edad_seleccion, id='edad', className='edad')], id='edades',
-#                                      className='mini_container-grid-2'),
-#                             html.Div([html.P('Género', className='titulo-genero'),
-#                                       html.Img(src=obtener_cascos, id='genero', alt='porcentaje_genero',
-#                                                className='imagen-genero')],
-#                                      id='genero-cont', className='genero'),
-#                             html.Div(dcc.Graph(figure=figure_sankey, id='sankey', className='sankey-graph',
-#                                                config=estilo_graficas),
-#                                      className='sankey'),
-#                             html.Div(dcc.Graph(figure=figure_bar, id='hora_recorrido', className='hora-recorrido-graph',
-#                                                config=estilo_graficas),
-#                                      className='hora-recorrido')],
-#                            className='contenedor-ecobici')
-#                        ])
-
 
 app.layout = html.Div([html.Div(html.Div([html.Div(modal_content),
                                           html.Hr(),
@@ -444,17 +392,42 @@ def select_ageb(clickData, data):
     if data is None:
         data = {'ageb_inicial': ageb_inicial_default, 'ageb_final': ageb_final_default}
     else:
-        data['ageb_inicial'] = data['ageb_final']
+        # data['ageb_inicial']
         data['ageb_final'] = clickData['points'][0]['location']
 
-    figura_mapa_actualizado = dibujar_mapa(data['ageb_final'])
+    figura_mapa_actualizado = dibujar_mapa(data['ageb_inicial'])
     figure_sankey_actualizado = dibujar_sankey(data['ageb_inicial'], data['ageb_final'])
     edad_actualizado = edad(data['ageb_inicial'], data['ageb_final'])
-    cascos_actualizado = nombre_archivo_cascos(data['ageb_inicial'])
+    cascos_actualizado = nombre_archivo_cascos(data['ageb_inicial'], data['ageb_final'])
     figura_barras_actualizado = dibujar_barras(data['ageb_inicial'], data['ageb_final'])
 
     return figura_mapa_actualizado, figure_sankey_actualizado, edad_actualizado, cascos_actualizado, figura_barras_actualizado, data
 
+
+# @app.callback([Output('mapa-graph', 'figure'),
+#                Output('sankey', 'figure'),
+#                Output('edad', 'children'),
+#                Output('genero', 'src'),
+#                Output('hora_recorrido', 'figure'),
+#                Output('memory', 'data')],
+#               [Input('mapa-graph', 'clickData')],
+#               [State('memory', 'data')])
+# def select_ageb(clickData, data):
+#     if data is None:
+#         data = {'ageb_inicial': ageb_inicial_default, 'ageb_final': ageb_final_default}
+#         print(data)
+#     else:
+#         data['ageb_inicial'] = data['ageb_final']
+#         data['ageb_final'] = clickData['points'][0]['location']
+#         print(data, clickData)
+#
+#     figura_mapa_actualizado = dibujar_mapa(data['ageb_final'])
+#     figure_sankey_actualizado = dibujar_sankey(data['ageb_inicial'], data['ageb_final'])
+#     edad_actualizado = edad(data['ageb_inicial'], data['ageb_final'])
+#     cascos_actualizado = nombre_archivo_cascos(data['ageb_inicial'])
+#     figura_barras_actualizado = dibujar_barras(data['ageb_inicial'], data['ageb_final'])
+#
+#     return figura_mapa_actualizado, figure_sankey_actualizado, edad_actualizado, cascos_actualizado, figura_barras_actualizado, data
 
 if __name__ == '__main__':
     app.run_server(debug=True)
