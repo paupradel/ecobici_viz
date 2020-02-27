@@ -37,8 +37,8 @@ app.index_string = '''
 </html>'''
 
 # ---------------------------------CALLBACKS-------------------------------#
-ageb_inicial_default = 1197
-ageb_final_default = 930
+ageb_inicial_default = 70
+ageb_final_default = 11
 
 # Leer shapefile y csv
 geodataframe = gpd.read_file('./data/production_data/ageb_geometry/ageb_geometria.shp')
@@ -55,8 +55,6 @@ geodataframe = quitar_ceros(geodataframe, 'CVE_AGEB')
 def dibujar_mapa(primer_ageb):
     primer_ageb_str = str(primer_ageb)
     geodf_jdata = obtenergeo_json_df(dataframe, geodataframe, 'CVE_AGEB', primer_ageb)
-
-    # df_estaciones_ageb = pd.read_csv('./graphs_build/estaciones_en_agebs.csv')
 
     geodf = geodf_jdata[0]
     jdata = geodf_jdata[1]
@@ -175,7 +173,7 @@ def nombre_archivo_cascos(primer_ageb, segundo_ageb, df_ve=df_ve):
     Mostrar una imagen dependiendo del porcentaje de hombres y mujeres que hacen viajes en ecobici entre agebs
     """
 
-    df_ve = df_ve[(df_ve['CVE_AGEB_retiro_'] == primer_ageb)&(df_ve['CVE_AGEB_arribo_'] == segundo_ageb)]
+    df_ve = df_ve[(df_ve['CVE_AGEB_retiro_'] == primer_ageb) & (df_ve['CVE_AGEB_arribo_'] == segundo_ageb)]
     query_genero = df_ve[["porcentage_hombres", "porcentage_mujeres"]].mean().round().astype(int)
     numero_hombres = query_genero[0]
 
@@ -275,6 +273,22 @@ def dibujar_barras(primer_ageb, segundo_ageb, df_ve=df_ve):
 
 figure_bar = dibujar_barras(ageb_inicial_default, ageb_final_default)
 
+
+# ---------------------------------------------CONOCER AGEBS Y ESTACIONES-----------------------------------------------#
+
+def conocer_agebs(primer_ageb, segundo_ageb, clave='CVE_AGEB', columna_estaciones='text'):
+    df_estaciones_ageb = pd.read_csv('./graphs_build/estaciones_en_agebs.csv')
+    df_estaciones_ageb = df_estaciones_ageb.loc[df_estaciones_ageb[clave].isin([primer_ageb, segundo_ageb])]
+
+    estaciones_primer_ageb = df_estaciones_ageb.iloc[0][columna_estaciones]
+    estaciones_segundo_ageb = df_estaciones_ageb.iloc[1][columna_estaciones]
+
+    return primer_ageb, segundo_ageb, estaciones_primer_ageb, estaciones_segundo_ageb
+
+
+info_ageb_inicial = conocer_agebs(ageb_inicial_default, ageb_final_default)[0]
+info_ageb_final = conocer_agebs(ageb_inicial_default, ageb_final_default)[1]
+
 # ---------------------------------------------------------------------------------------------------------------------#
 
 click_data_inicial = {
@@ -321,7 +335,6 @@ estilo_graficas = {'responsive': True,
                    'autosizable': True,
                    'displaylogo': False}
 
-
 app.layout = html.Div([html.Div(html.Div([html.Div(modal_content),
                                           html.Hr(),
                                           html.Button('Ir a la aplicación', id='modal-close-button',
@@ -347,9 +360,18 @@ app.layout = html.Div([html.Div(html.Div([html.Div(modal_content),
                                                href='https://github.com/paupradel/ecobici_viz')], className='iconos')
                                     ]),
                        html.Div(
-                           [html.Div(dcc.Graph(figure=figure_mapa, id='mapa-graph', className='mapa-graph',
-                                               clickData=click_data_inicial,
-                                               config=estilo_graficas), id='mapa', className='mapa'),
+                           [html.Div([html.Div([html.Div('AGEB inicio'),
+                                                dbc.Badge(info_ageb_inicial, id='indicador_ageb_inicial',
+                                                          className='badge-ageb'),
+                                                html.Div('AGEB fin'),
+                                                dbc.Badge(info_ageb_final, id='indicador_ageb_final',
+                                                          className='badge-ageb'),
+                                                dbc.Button('Borrar', color='light', className='mr-1')],
+                                               id='contenedor-agebs',
+                                               className='contenedor-agebs'),
+                                      dcc.Graph(figure=figure_mapa, id='mapa-graph', className='mapa-graph',
+                                                clickData=click_data_inicial,
+                                                config=estilo_graficas)], id='mapa', className='mapa'),
                             html.Div([html.P('Edad'),
                                       html.H1(edad_seleccion, id='edad', className='edad')], id='edades',
                                      className='mini_container-grid-2'),
@@ -365,6 +387,51 @@ app.layout = html.Div([html.Div(html.Div([html.Div(modal_content),
                                      className='hora-recorrido')],
                            className='contenedor-ecobici')
                        ])
+
+
+# app.layout = html.Div([html.Div(html.Div([html.Div(modal_content),
+#                                           html.Hr(),
+#                                           html.Button('Ir a la aplicación', id='modal-close-button',
+#                                                       className='modal-close-button')],
+#                                          id='modal-content',
+#                                          className='modal-content'),
+#                                 id='modal_1',
+#                                 className='modal'),
+#                        dcc.Store(id='memory'),
+#                        html.Header([html.Div([html.H1('¿Ecobici o Auto? Que te conviene más')], id='titulo-app',
+#                                              className='titulo-app'),
+#                                     html.Div([html.Div(
+#                                         [html.I(id='instrucciones_button', n_clicks=0,
+#                                                 className='fas fa-info-circle fa-2x'),
+#                                          dbc.Modal([dbc.ModalBody(modal_content),
+#                                                     html.Hr(),
+#                                                     dbc.ModalFooter(dbc.Button('Ir a la aplicación', id='close_2',
+#                                                                                className='modal-close-button'))],
+#                                                    id='modal_2')]),
+#
+#                                         html.A([html.Img(src=app.get_asset_url('github.png'), alt='logo github',
+#                                                          className='logo')],
+#                                                href='https://github.com/paupradel/ecobici_viz')], className='iconos')
+#                                     ]),
+#                        html.Div(
+#                            [html.Div(dcc.Graph(figure=figure_mapa, id='mapa-graph', className='mapa-graph',
+#                                                clickData=click_data_inicial,
+#                                                config=estilo_graficas), id='mapa', className='mapa'),
+#                             html.Div([html.P('Edad'),
+#                                       html.H1(edad_seleccion, id='edad', className='edad')], id='edades',
+#                                      className='mini_container-grid-2'),
+#                             html.Div([html.P('Género', className='titulo-genero'),
+#                                       html.Img(src=obtener_cascos, id='genero', alt='porcentaje_genero',
+#                                                className='imagen-genero')],
+#                                      id='genero-cont', className='genero'),
+#                             html.Div(dcc.Graph(figure=figure_sankey, id='sankey', className='sankey-graph',
+#                                                config=estilo_graficas),
+#                                      className='sankey'),
+#                             html.Div(dcc.Graph(figure=figure_bar, id='hora_recorrido', className='hora-recorrido-graph',
+#                                                config=estilo_graficas),
+#                                      className='hora-recorrido')],
+#                            className='contenedor-ecobici')
+#                        ])
 
 
 @app.callback(Output('modal_1', 'style'),
@@ -389,6 +456,8 @@ def toggle_modal(n1, n2, is_open):
                Output('edad', 'children'),
                Output('genero', 'src'),
                Output('hora_recorrido', 'figure'),
+               Output('indicador_ageb_inicial', 'children'),
+               Output('indicador_ageb_final', 'children'),
                Output('memory', 'data')],
               [Input('mapa-graph', 'clickData')],
               [State('memory', 'data')])
@@ -399,13 +468,40 @@ def select_ageb(clickData, data):
         # data['ageb_inicial']
         data['ageb_final'] = clickData['points'][0]['location']
 
+    ageb_inicial_actualizado = conocer_agebs(data['ageb_inicial'], data['ageb_final'])[0]
+    ageb_final_actualizado = conocer_agebs(data['ageb_inicial'], data['ageb_final'])[1]
     figura_mapa_actualizado = dibujar_mapa(data['ageb_inicial'])
     figure_sankey_actualizado = dibujar_sankey(data['ageb_inicial'], data['ageb_final'])
     edad_actualizado = edad(data['ageb_inicial'], data['ageb_final'])
     cascos_actualizado = nombre_archivo_cascos(data['ageb_inicial'], data['ageb_final'])
     figura_barras_actualizado = dibujar_barras(data['ageb_inicial'], data['ageb_final'])
 
-    return figura_mapa_actualizado, figure_sankey_actualizado, edad_actualizado, cascos_actualizado, figura_barras_actualizado, data
+    return figura_mapa_actualizado, figure_sankey_actualizado, edad_actualizado, cascos_actualizado, figura_barras_actualizado, \
+           ageb_inicial_actualizado, ageb_final_actualizado, data
+
+
+# @app.callback([Output('mapa-graph', 'figure'),
+#                Output('sankey', 'figure'),
+#                Output('edad', 'children'),
+#                Output('genero', 'src'),
+#                Output('hora_recorrido', 'figure'),
+#                Output('memory', 'data')],
+#               [Input('mapa-graph', 'clickData')],
+#               [State('memory', 'data')])
+# def select_ageb(clickData, data):
+#     if data is None:
+#         data = {'ageb_inicial': ageb_inicial_default, 'ageb_final': ageb_final_default}
+#     else:
+#         # data['ageb_inicial']
+#         data['ageb_final'] = clickData['points'][0]['location']
+#
+#     figura_mapa_actualizado = dibujar_mapa(data['ageb_inicial'])
+#     figure_sankey_actualizado = dibujar_sankey(data['ageb_inicial'], data['ageb_final'])
+#     edad_actualizado = edad(data['ageb_inicial'], data['ageb_final'])
+#     cascos_actualizado = nombre_archivo_cascos(data['ageb_inicial'], data['ageb_final'])
+#     figura_barras_actualizado = dibujar_barras(data['ageb_inicial'], data['ageb_final'])
+#
+#     return figura_mapa_actualizado, figure_sankey_actualizado, edad_actualizado, cascos_actualizado, figura_barras_actualizado, data
 
 
 # @app.callback([Output('mapa-graph', 'figure'),

@@ -206,3 +206,11 @@ P {
     cursor: pointer;
     align-items: center;
 }
+
+.badge-ageb {
+    font-family: 'Raleway', sans-serif;
+    font-size: 16px;
+    background-color: mediumpurple;
+    color: white;
+    align-items: center;
+}
