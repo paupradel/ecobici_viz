@@ -70,13 +70,34 @@ P {
 }
 
 
-.mapa {
+.contenedor-agebs {
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    width: 50%;
+    display: inline-flex;
+    /*margin-top: 0px;*/
+    /*margin-left: 20px;*/
+    /*margin-right: 10px;*/
+    /*padding: 5px;*/
+    position: relative;
+    box-shadow: 2px 2px 2px lightgrey;
+    grid-area: agebs;
+    grid-template-columns: 20% 20% 20% 20% 20%;
+    grid-template-rows: 100%;
+    grid-template-areas: 'textoini agebini textofin agebfin borrar';
+}
+
+.mapa-agebs {
     height: calc(100vh - 50px);
+    width: 50%;
     margin: 0;
     margin-bottom: 0px;
     padding: 0;
     position: absolute;
     grid-area: mapa;
+    grid-template-columns: 100%;
+    grid-template-rows: 10% 50%;
+    grid-template-areas: 'agebs' 'mapa-graph';
     z-index: 1;
 }
 
@@ -84,16 +105,51 @@ P {
     height: 95%;
     margin-bottom: 10px;
     padding: 0;
+    grid-area: mapa-graph;
     position: absolute;
     z-index: 1;
-}
-
-.mapa mapa-graph {
     display: block;
     width: 100%;
     border: 0;
-    z-index: 1;
 }
+
+/*.mapa-agebs mapa-graph {*/
+/*    display: block;*/
+/*    width: 100%;*/
+/*    border: 0;*/
+/*    z-index: 1;*/
+/*}*/
+
+.texto-inicio {
+    grid-area: textoini;
+}
+
+.texto-fin {
+    grid-area: textofin;
+}
+
+.badge-ageb-ini {
+    font-family: 'Raleway', sans-serif;
+    font-size: 16px;
+    background-color: mediumpurple;
+    color: white;
+    align-items: center;
+    grid-area: agebini;
+}
+
+.badge-ageb-fin {
+    font-family: 'Raleway', sans-serif;
+    font-size: 16px;
+    background-color: mediumpurple;
+    color: white;
+    align-items: center;
+    grid-area: agebfin;
+}
+
+.borrar-button {
+    grid-area: borrar;
+}
+
 
 .titulo-genero {
     grid-area: titulogenero
@@ -207,10 +263,3 @@ P {
     align-items: center;
 }
 
-.badge-ageb {
-    font-family: 'Raleway', sans-serif;
-    font-size: 16px;
-    background-color: mediumpurple;
-    color: white;
-    align-items: center;
-}
