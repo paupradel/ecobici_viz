@@ -56,12 +56,16 @@ def dibujar_mapa(primer_ageb):
     primer_ageb_str = str(primer_ageb)
     geodf_jdata = obtenergeo_json_df(dataframe, geodataframe, 'CVE_AGEB', primer_ageb)
 
+    # df_estaciones_ageb = pd.read_csv('./graphs_build/estaciones_en_agebs.csv')
+
     geodf = geodf_jdata[0]
     jdata = geodf_jdata[1]
 
     z = geodf[primer_ageb_str].tolist()
 
     locations = geodf['CVE_AGEB'].tolist()
+
+    id = jdata
 
     trace_mapa = go.Choroplethmapbox(z=z,
                                      locations=locations,
