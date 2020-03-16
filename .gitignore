@@ -9,7 +9,9 @@ mexico_city-agebs-2019-1-OnlyWeekdays-HourlyAggregate.csv
 datos_ecobici_ageb.csv
 *.afphoto
 
-# env_ecobici
+
+/env_ecobici
+env_ecobici/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
